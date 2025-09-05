@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float coyoteTime = 0.2f;
     float coyoteTimer;
 
+    [SerializeField] GameObject walkingEffect;
+    ParticleSystem walkingParticleSystem;
+
     [SerializeField] float jumpBufferTime = 0.2f;
     float jumpBufferTimer;
 
@@ -22,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if (walkingEffect != null)
+            walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
     }
 
     private void FixedUpdate()
@@ -57,6 +62,8 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = new Vector3(vel.x, rb.linearVelocity.y, vel.z);
 
+        WalkingEffect();
+
         Jump();
     }
 
@@ -68,6 +75,28 @@ public class PlayerController : MonoBehaviour
             coyoteTimer = 0f;
             jumpBufferTimer = 0f;
             Debug.Log("Jumped with coyoteTimer = " + coyoteTimer);
+        }
+    }
+
+    void WalkingEffect()
+    {
+        bool isMoving = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                         Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D));
+
+        if (walkingParticleSystem != null)
+        {
+            if (isGrounded && isMoving)
+            {
+                if (!walkingParticleSystem.isPlaying)
+                    walkingParticleSystem.Play();
+            }
+            else
+            {
+                if (walkingParticleSystem.isPlaying)
+                    walkingParticleSystem.Stop();   
+            }
+
+
         }
     }
 }
