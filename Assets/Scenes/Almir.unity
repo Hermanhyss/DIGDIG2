@@ -388,7 +388,7 @@ MonoBehaviour:
   jumpStrength: 140
   gravityScale: 5
   coyoteTime: 0.2
-  jumpBufferTime: 0.4
+  walkingEffect: {fileID: 0}
   isGrounded: 0
   Ground:
     serializedVersion: 2
@@ -436,7 +436,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 859485208}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c82888457d63f4348a98b898ddd30b0c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -799,13 +799,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394851409}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.63392437, y: -0.22007641, z: 0.20645824, w: 0.7120964}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 83.567, y: -27.465, z: 7.7}
 --- !u!114 &1394851412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,7 +876,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1500473706}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c82888457d63f4348a98b898ddd30b0c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
