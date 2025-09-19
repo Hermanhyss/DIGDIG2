@@ -1,4 +1,3 @@
-using UnityEditor.Build;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,6 +10,8 @@ public class PlayerController : MonoBehaviour
     float coyoteTimer;
     int jumpCount;
     int maxJumpCount = 2;
+
+    public int playerHP = 100;
 
     [SerializeField] GameObject walkingEffect;
     ParticleSystem walkingParticleSystem;
