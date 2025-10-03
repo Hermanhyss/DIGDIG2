@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float playerSpeed = 7f;
+    float playerSpeed = 3f;
     [SerializeField] float jumpStrength = 5.0f;
     public float gravityScale = 1.0f;
     public static float globalGravity = -9.82f;
@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
         rb.AddForce(gravity, ForceMode.Acceleration);
+
+        var direction = transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal");
+        direction.Normalize();
+        rb.MovePosition(transform.position + direction * playerSpeed * Time.deltaTime);
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
 
