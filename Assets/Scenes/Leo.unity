@@ -1541,12 +1541,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8954030303168630312}
   - component: {fileID: 8954030303168630318}
-  - component: {fileID: 8954030303168630317}
   - component: {fileID: 8954030303168630316}
+  - component: {fileID: 8954030303168630319}
   - component: {fileID: 8954030303168630315}
   - component: {fileID: 8954030303168630314}
   - component: {fileID: 8954030303168630313}
-  - component: {fileID: 8954030303168630319}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -1696,31 +1695,10 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &8954030303168630317
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8577329457080259730}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 1.95
+  m_Center: {x: -0.06, y: 0, z: 2.02}
 --- !u!114 &8954030303168630318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1735,6 +1713,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   Enemyrb: {fileID: 8954030303168630314}
   enemyHealth: 3
+  detectCollider: {fileID: 8954030303168630316}
+  collisionCollider: {fileID: 8954030303168630319}
 --- !u!136 &8954030303168630319
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -7,6 +7,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Rigidbody Enemyrb;
     float enemymoveSpeed = 5f;
     [SerializeField] int enemyHealth = 3;
+    [SerializeField] Collider detectCollider;
+    [SerializeField] Collider collisionCollider;
     NavMeshAgent agent;
 
 
@@ -37,21 +39,24 @@ public class EnemyController : MonoBehaviour
         //}
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void TriggerEnter2D(Collider other)
     {
         // Fix nav mesh agent so it stops when detecting player
         if (Player != null && other == Player.GetComponent<Collider>())
         {
-            enemymoveSpeed = 0f;
+            agent.isStopped = true;
         }
     }
-    private void OnTriggerExit(Collider other)
+    private void TriggerExit2D(Collider other)
     {
         if (Player != null && other == Player.GetComponent<Collider>())
         {
-            enemymoveSpeed = 5f;
+            agent.isStopped = false;
         }
     }
+
+
+
 
     // CONTINUE WORK ON THIS: DETECT WHEN PLAYER IS IN CERTAIN RADIUS OF ENEMY
     //Physics.Spherecast(GameObject.transform.position, 0.5f, Vector3.forward, out RaycastHit hitInfo, 1f);
