@@ -1,30 +1,28 @@
 using UnityEngine;
+using Unity.Cinemachine;
+using System.Linq;
 
 public class PositionTriggerScript : MonoBehaviour
 {
-    [SerializeField]GameObject player;
-    PlayerTeleport pt;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public Transform teleportDestination;
+    public CinemachineCamera nextRoomCamera; // Updated to use CinemachineCamera
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("Player entered the trigger zone.");
-            // Add your logic here for when the player enters the trigger zone
-        }
+        if (!other.CompareTag("Player")) return;
 
-        pt = player.GetComponent<PlayerTeleport>();
-        pt.Teleport(Vector3.zero);
+        // Teleport player
+        other.transform.SetPositionAndRotation(teleportDestination.position, teleportDestination.rotation);
+
+        // Find active camera and lower its priority
+        var activeCam = Object.FindObjectsByType<CinemachineCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None) 
+            .OrderByDescending(c => c.Priority).FirstOrDefault();
+        if (activeCam != null)
+            activeCam.Priority = 5;
+
+        // Raise next camera's priority
+        if (nextRoomCamera != null)
+            nextRoomCamera.Priority = 10;
     }
-
 }
+
