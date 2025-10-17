@@ -7,12 +7,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Rigidbody enemyRb;
     [SerializeField] private Collider detectCollider;
     [SerializeField] private Collider collisionCollider;
-    [SerializeField] private Animator animator; // Add this line
+    [SerializeField] private Animator animator;
+    [SerializeField] private Collider attackCollider;
     private NavMeshAgent agent;
     private GameObject player;
 
     [Header("Settings")]
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private int health = 3;
 
     private void Awake()
@@ -24,26 +24,54 @@ public class Enemy : MonoBehaviour
             player = playerController.gameObject;
         }
     }
+    // Attack Animation Event Start
+    public void OnAttackAnimationEvent()
+
+    {
+        Debug.Log("Enabling attack collider");
+        if (attackCollider != null)
+            attackCollider.enabled = true;
+    }
+    // Attack Animation Event End
+    public void OnAttackAnimationEnd()
+    {
+        Debug.Log("Disabling attack collider");
+        if (attackCollider != null)
+            attackCollider.enabled = false;  
+    }
+
 
     private void Update()
     {
-        if (player != null && agent != null)
+        if (player != null && agent != null && !animator.GetBool("IsDead"))
         {
-            agent.SetDestination(player.transform.position);
-            animator.SetBool("IsMoving", true); // Play movement animation
+            if (!animator.GetBool("IsAttacking"))
+            {
+                agent.SetDestination(player.transform.position);
+                animator.SetBool("IsMoving", true);
+            }
         }
-        else
-        {
-            animator.SetBool("IsMoving", false);
-        }
-    }
 
+
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (player != null && other == player.GetComponent<Collider>())
         {
             agent.isStopped = true;
-            animator.SetTrigger("Attack"); // Play attack animation
+            animator.SetBool("IsAttacking", true);
+            animator.SetBool("IsMoving", false);
+        }
+        // Enemy Damage
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Doing attack!");
+            var playerController = other.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                //  playerController.TakeDamage(1);
+                Debug.Log("Doing attack!");
+            }
         }
     }
 
@@ -52,32 +80,20 @@ public class Enemy : MonoBehaviour
         if (player != null && other == player.GetComponent<Collider>())
         {
             agent.isStopped = false;
-            animator.SetBool("IsMoving", true); // Resume movement animation
+            animator.SetBool("IsMoving", true);
+            animator.SetBool("IsAttacking", false); 
         }
     }
-
-    // Example: Detect player within a certain radius
-    private void DetectPlayer()
-    {
-        float detectionRadius = 5f;
-        Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius);
-        foreach (var hit in hits)
-        {
-            if (hit.gameObject == player)
-            {
-                // Player detected
-            }
-        }
-    }
-
-    // Example: Take damage
+    // Enemy takes damage
     public void TakeDamage(int amount)
     {
         health -= amount;
         if (health <= 0)
         {
-            animator.SetTrigger("Death"); // Play death animation
-            Destroy(gameObject, 1.5f); // Delay destroy to allow animation to play
+            animator.SetBool("IsDead", true);
+            Destroy(gameObject, 1.5f);
         }
     }
+
+
 }
