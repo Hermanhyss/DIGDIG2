@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -24,7 +25,7 @@ public class Enemy : MonoBehaviour
             player = playerController.gameObject;
         }
     }
-    // Attack Animation Event Start
+   
     public void OnAttackAnimationEvent()
 
     {
@@ -32,12 +33,28 @@ public class Enemy : MonoBehaviour
         if (attackCollider != null)
             attackCollider.enabled = true;
     }
-    // Attack Animation Event End
+    
     public void OnAttackAnimationEnd()
     {
         Debug.Log("Disabling attack collider");
         if (attackCollider != null)
-            attackCollider.enabled = false;  
+            attackCollider.enabled = false; 
+
+        
+    }
+
+
+    IEnumerator AfterAttack()
+    {
+        if (player != null)
+        {
+            Debug.Log("Enemy has finished attacking");
+            yield return new WaitForSeconds(5.0f);
+            agent.isStopped = false;
+            animator.SetBool("IsAttacking", false);
+            animator.SetBool("IsMoving", true);
+        }
+        yield return null;
     }
 
 
@@ -51,7 +68,7 @@ public class Enemy : MonoBehaviour
                 animator.SetBool("IsMoving", true);
             }
         }
-
+        
 
     }
     private void OnTriggerEnter(Collider other)
@@ -61,7 +78,10 @@ public class Enemy : MonoBehaviour
             agent.isStopped = true;
             animator.SetBool("IsAttacking", true);
             animator.SetBool("IsMoving", false);
+            StartCoroutine(AfterAttack());
+           
         }
+        
         // Enemy Damage
         if (other.CompareTag("Player"))
         {
@@ -75,15 +95,17 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (player != null && other == player.GetComponent<Collider>())
-        {
-            agent.isStopped = false;
-            animator.SetBool("IsMoving", true);
-            animator.SetBool("IsAttacking", false); 
-        }
-    }
+
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (player != null && other == player.GetComponent<Collider>())
+    //    {
+    //        agent.isStopped = false;
+    //        animator.SetBool("IsMoving", true);
+    //        animator.SetBool("IsAttacking", false);
+    //    }
+    //}
     // Enemy takes damage
     public void TakeDamage(int amount)
     {
@@ -94,6 +116,8 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject, 1.5f);
         }
     }
+
+    
 
 
 }
