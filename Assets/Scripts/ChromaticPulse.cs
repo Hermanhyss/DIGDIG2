@@ -37,7 +37,7 @@ public class ChromaticPulse : MonoBehaviour
         }
     }
 
-    IEnumerator Pulse()
+    public IEnumerator Pulse()
     {
         float elapsed = 0f;
         float startValue = chroma.intensity.value;
@@ -51,7 +51,6 @@ public class ChromaticPulse : MonoBehaviour
             chroma.intensity.value = value;
             yield return null;
         }
-
         chroma.intensity.value = 0f;
     }
 }

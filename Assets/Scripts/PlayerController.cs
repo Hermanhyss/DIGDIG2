@@ -22,11 +22,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
 
+    ChromaticPulse chromaticPulse;
+    ChromaticVignettePulse chromaticVignettePulse;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        chromaticPulse = FindFirstObjectByType<ChromaticPulse>();
+        chromaticVignettePulse = FindFirstObjectByType<ChromaticVignettePulse>();
         if (walkingEffect != null)
             walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
+    }
+
+    private void Update()
+    {
+        Jump();
     }
 
     private void FixedUpdate()
@@ -48,23 +58,31 @@ public class PlayerController : MonoBehaviour
 
         Vector3 vel = rb.linearVelocity;
 
+        //NOT DONE
         if (Input.GetKey(KeyCode.D))
-            vel.x = transform.right.x * playerSpeed;
+        {
+            rb.linearVelocity = transform.forward * playerSpeed;
+            gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
 
         if (Input.GetKey(KeyCode.A))
-            vel.x = -transform.right.x * playerSpeed;
+        {
+            rb.linearVelocity = transform.forward * playerSpeed;
+            gameObject.transform.rotation = Quaternion.Euler(0, -90, 0);
+        }
 
         if (Input.GetKey(KeyCode.W))
-            vel.z = transform.forward.z * playerSpeed;
+        {
+            rb.linearVelocity = transform.forward * playerSpeed;
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
 
         if (Input.GetKey(KeyCode.S))
-            vel.z = -transform.forward.z * playerSpeed;
-
-        rb.linearVelocity = new Vector3(vel.x, rb.linearVelocity.y, vel.z);
-
+        {
+            rb.linearVelocity = transform.forward * playerSpeed;
+            gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
         WalkingEffect();
-
-        Jump();
     }
 
     void Jump()
@@ -72,6 +90,9 @@ public class PlayerController : MonoBehaviour
         if (coyoteTimer > 0f && jumpBufferTimer > 0f)
         {
             rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+            //StartCoroutine(chromaticPulse.Pulse());
+            //StartCoroutine(chromaticVignettePulse.Pulse());
+
             coyoteTimer = 0f;
             jumpBufferTimer = 0f;
             Debug.Log("Jumped with coyoteTimer = " + coyoteTimer);
@@ -95,8 +116,6 @@ public class PlayerController : MonoBehaviour
                 if (walkingParticleSystem.isPlaying)
                     walkingParticleSystem.Stop();   
             }
-
-
         }
     }
 }

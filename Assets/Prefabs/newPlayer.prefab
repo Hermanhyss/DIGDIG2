@@ -4941,7 +4941,7 @@ GameObject:
   - component: {fileID: 5109674358312298249}
   m_Layer: 0
   m_Name: newPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5084,8 +5084,8 @@ MonoBehaviour:
   jumpStrength: 140
   gravityScale: 5
   coyoteTime: 0.2
-  playerHP: 100
-  walkingEffect: {fileID: 0}
+  walkingEffect: {fileID: 1146745837757941211}
+  jumpBufferTime: 0.2
   isGrounded: 0
   Ground:
     serializedVersion: 2
