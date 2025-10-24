@@ -37,7 +37,7 @@ public class ChromaticVignettePulse : MonoBehaviour
             StartCoroutine(Pulse());
     }
 
-    IEnumerator Pulse()
+    public IEnumerator Pulse()
     {
         float t = 0;
         while (t < duration)
