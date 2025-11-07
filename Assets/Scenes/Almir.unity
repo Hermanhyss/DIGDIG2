@@ -1085,6 +1085,10 @@ PrefabInstance:
       value: newPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 6017493512551740256, guid: 6b0a462b836807a419df6a1032fe06cd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.3614
+      objectReference: {fileID: 0}
+    - target: {fileID: 6017493512551740256, guid: 6b0a462b836807a419df6a1032fe06cd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.632354
       objectReference: {fileID: 0}

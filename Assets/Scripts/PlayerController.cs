@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float playerSpeed = 7f;
+    [SerializeField] float playerSpeed = 7f;
     [SerializeField] float jumpStrength = 5.0f;
     public float gravityScale = 1.0f;
     public static float globalGravity = -9.82f;
@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float jumpBufferTime = 0.2f;
     float jumpBufferTimer;
+    int jumpCount = 2;
 
     [SerializeField] bool isGrounded;
     [SerializeField] LayerMask Ground;
@@ -38,6 +39,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
+
+        if (isGrounded && rb.linearVelocity.y <= 0f)
+            jumpCount = 2;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            jumpBufferTimer = jumpBufferTime;
+        else
+            jumpBufferTimer -= Time.deltaTime;
+
         Jump();
     }
 
@@ -45,18 +57,6 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
         rb.AddForce(gravity, ForceMode.Acceleration);
-
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
-
-        if (isGrounded)
-            coyoteTimer = coyoteTime;
-        else
-            coyoteTimer -= Time.fixedDeltaTime;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            jumpBufferTimer = jumpBufferTime;
-        else
-            jumpBufferTimer -= Time.fixedDeltaTime;
 
         Vector3 vel = rb.linearVelocity;
 
@@ -80,15 +80,12 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (coyoteTimer > 0f && jumpBufferTimer > 0f)
+        if (jumpBufferTimer > 0f && jumpCount > 0)
         {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
-            //StartCoroutine(chromaticPulse.Pulse());
-            //StartCoroutine(chromaticVignettePulse.Pulse());
-
-            coyoteTimer = 0f;
+            jumpCount--;
             jumpBufferTimer = 0f;
-            Debug.Log("Jumped with coyoteTimer = " + coyoteTimer);
         }
     }
 
