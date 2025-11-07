@@ -1,15 +1,19 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
     private GameObject Player;
+    [SerializeField] Transform EnemyTransform;
     [SerializeField] Rigidbody Enemyrb;
     float enemymoveSpeed = 5f;
     [SerializeField] int enemyHealth = 3;
     [SerializeField] Collider detectCollider;
     [SerializeField] Collider collisionCollider;
     NavMeshAgent agent;
+    bool noticePlayer = false;
+    Coroutine patrolCoroutine;
 
 
     PlayerController playerController;
@@ -23,14 +27,29 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-    
+        patrolCoroutine = StartCoroutine(Patrol());
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        agent.SetDestination(Player.transform.position);
+        if (noticePlayer)
+        {
+            if (patrolCoroutine != null)
+            {
+                StopCoroutine(patrolCoroutine);
+                patrolCoroutine = null;
+            }
+            agent.isStopped = false;
+            agent.SetDestination(Player.transform.position);
+        }
+        else
+        {
+            if (patrolCoroutine == null)
+            {
+                patrolCoroutine = StartCoroutine(Patrol());
+            }
+        }
 
         //if (Player != null)
         //{
@@ -55,13 +74,24 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    IEnumerator Patrol()
+    {
+        //Check if enemy notices player
+            float rotationY = Random.Range(-100, 100);
+            EnemyTransform.Rotate(0, rotationY, 0);
 
+            Vector3 forwardMove = EnemyTransform.forward * 4;
+            agent.SetDestination(EnemyTransform.position + forwardMove);
+
+            yield return new WaitForSeconds(5f);
+        
+    }
 
 
     // CONTINUE WORK ON THIS: DETECT WHEN PLAYER IS IN CERTAIN RADIUS OF ENEMY
     //Physics.Spherecast(GameObject.transform.position, 0.5f, Vector3.forward, out RaycastHit hitInfo, 1f);
-    
-    
+
+
     //public void TakeDamage()
     //{
 
