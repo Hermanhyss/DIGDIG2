@@ -31,7 +31,6 @@ public class Enemy : MonoBehaviour
     }
    
     public void OnAttackAnimationEvent()
-
     {
         Debug.Log("Enabling attack collider");
         if (attackCollider != null)
@@ -43,8 +42,6 @@ public class Enemy : MonoBehaviour
         Debug.Log("Disabling attack collider");
         if (attackCollider != null)
             attackCollider.enabled = false; 
-
-        
     }
 
 
@@ -62,31 +59,51 @@ public class Enemy : MonoBehaviour
     }
 
 
+        
+
+        //if (noticePlayer)
+        //{
+        //    if (patrolCoroutine != null)
+        //    {
+        //         StopCoroutine(patrolCoroutine);
+        //         patrolCoroutine = null;
+        //    }
+        //    agent.isStopped = false;
+        //    agent.SetDestination(player.transform.position);
+            
+
+
+        //    Debug.Log("Chasing Player");
+        //}
+        //if (!noticePlayer)
+        //{
+        //    patrolCoroutine = StartCoroutine(Patrol());
+        //    Debug.Log("Patrolling");
+        //}
+
+
     private void Update()
     {
         if (noticePlayer)
         {
-            
             if (patrolCoroutine != null)
             {
-                 StopCoroutine(patrolCoroutine);
-                 patrolCoroutine = null;
+                StopCoroutine(patrolCoroutine);
+                patrolCoroutine = null;
             }
-            agent.SetDestination(player.transform.position);
+
             agent.isStopped = false;
-
-
+            agent.SetDestination(player.transform.position);
             Debug.Log("Chasing Player");
         }
-        else if (!noticePlayer)
+        else
         {
-            patrolCoroutine = StartCoroutine(Patrol());
-            Debug.Log("Patrolling");
+            if (patrolCoroutine == null)
+            {
+                patrolCoroutine = StartCoroutine(Patrol());
+                Debug.Log("Patrolling");
+            }
         }
-
-
-
-
 
         if (player != null && agent != null && !animator.GetBool("IsDead"))
         {
@@ -96,6 +113,10 @@ public class Enemy : MonoBehaviour
                 animator.SetBool("IsMoving", true);
             }
         }
+    }
+
+
+        
 
         //if (noticePlayer)
         //{
@@ -118,12 +139,11 @@ public class Enemy : MonoBehaviour
         //}
     
     
-    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (player != null && other == player.GetComponent<Collider>())
         {
-            noticePlayer = true;
             agent.isStopped = true;
             animator.SetBool("IsAttacking", true);
             animator.SetBool("IsMoving", false);
@@ -134,6 +154,7 @@ public class Enemy : MonoBehaviour
         // Enemy Damage
         if (other.CompareTag("Player"))
         {
+
             Debug.Log("Doing attack!");
             var playerController = other.GetComponent<PlayerController>();
             if (playerController != null)
@@ -146,16 +167,16 @@ public class Enemy : MonoBehaviour
 
 
 
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (player != null && other == player.GetComponent<Collider>())
-    //    {
-    //        agent.isStopped = false;
-    //        animator.SetBool("IsMoving", true);
-    //        animator.SetBool("IsAttacking", false);
-    //    }
-    //}
-    // Enemy takes damage
+    private void OnTriggerExit(Collider other)
+    {
+        if (player != null && other == player.GetComponent<Collider>())
+        {
+            agent.isStopped = false;
+            animator.SetBool("IsMoving", true);
+            animator.SetBool("IsAttacking", false);
+        }
+    }
+    //Enemy takes damage
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -170,9 +191,8 @@ public class Enemy : MonoBehaviour
     {
         while (!noticePlayer)
         {
-            float rotationY = Random.Range(-100, 100);
+            float rotationY = Random.Range(0, 360);
             EnemyTransform.Rotate(0, rotationY, 0);
-
 
             // Move forward a bit in the new direction
             Vector3 forwardMove = EnemyTransform.position + EnemyTransform.forward * 4f;

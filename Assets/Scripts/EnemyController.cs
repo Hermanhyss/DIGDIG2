@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Rigidbody Enemyrb;
     float enemymoveSpeed = 5f;
     [SerializeField] int enemyHealth = 3;
+    [SerializeField] float detectionRadius = 10f;
     [SerializeField] Collider detectCollider;
     [SerializeField] Collider collisionCollider;
     NavMeshAgent agent;
@@ -33,23 +34,34 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (noticePlayer)
+        CheckForPlayer();
+        
+        if(Player != null) 
         {
-            if (patrolCoroutine != null)
+
+            if (noticePlayer)
             {
-                StopCoroutine(patrolCoroutine);
-                patrolCoroutine = null;
+                agent.SetDestination(Player.transform.position);
+                agent.isStopped = false;
+
+                if (patrolCoroutine != null)
+                {
+                    StopCoroutine(patrolCoroutine);
+                    patrolCoroutine = null;
+                }
             }
-            agent.isStopped = false;
-            agent.SetDestination(Player.transform.position);
-        }
-        else
-        {
-            if (patrolCoroutine == null)
+            else if (!noticePlayer)
             {
-                patrolCoroutine = StartCoroutine(Patrol());
+                if (patrolCoroutine == null)
+                {
+                    patrolCoroutine = StartCoroutine(Patrol());
+                }
             }
+
+            return;
         }
+
+
 
         //if (Player != null)
         //{
@@ -58,7 +70,7 @@ public class EnemyController : MonoBehaviour
         //}
     }
 
-    private void TriggerEnter2D(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         // Fix nav mesh agent so it stops when detecting player
         if (Player != null && other == Player.GetComponent<Collider>())
@@ -66,7 +78,7 @@ public class EnemyController : MonoBehaviour
             agent.isStopped = true;
         }
     }
-    private void TriggerExit2D(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (Player != null && other == Player.GetComponent<Collider>())
         {
@@ -74,22 +86,37 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void CheckForPlayer()
+    {
+        //Check if enemy notices player
+        
+
+        if (Physics.SphereCast(EnemyTransform.position, 1, EnemyTransform.forward, out RaycastHit hitInfo, detectionRadius, LayerMask.GetMask("Player")))
+        {
+            noticePlayer = true;
+        }
+        else
+        {
+            noticePlayer = false;
+        }
+    }
+
     IEnumerator Patrol()
     {
         //Check if enemy notices player
-            float rotationY = Random.Range(-100, 100);
-            EnemyTransform.Rotate(0, rotationY, 0);
+        float rotationY = Random.Range(-100, 100);
+        EnemyTransform.Rotate(0, rotationY, 0);
 
-            Vector3 forwardMove = EnemyTransform.forward * 4;
-            agent.SetDestination(EnemyTransform.position + forwardMove);
+        Vector3 forwardMove = EnemyTransform.forward * 4;
+        agent.SetDestination(EnemyTransform.position + forwardMove);
 
-            yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(5f);
         
     }
 
 
     // CONTINUE WORK ON THIS: DETECT WHEN PLAYER IS IN CERTAIN RADIUS OF ENEMY
-    //Physics.Spherecast(GameObject.transform.position, 0.5f, Vector3.forward, out RaycastHit hitInfo, 1f);
+    
 
 
     //public void TakeDamage()
