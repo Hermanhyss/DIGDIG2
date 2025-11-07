@@ -43,23 +43,12 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
 
         if (isGrounded && rb.linearVelocity.y <= 0f)
-        {
-            coyoteTimer = coyoteTime;
             jumpCount = 2;
-        }
-        else
-        {
-            coyoteTimer -= Time.deltaTime;
-        }
 
         if (Input.GetKeyDown(KeyCode.Space))
-        {
             jumpBufferTimer = jumpBufferTime;
-        }
         else
-        {
             jumpBufferTimer -= Time.deltaTime;
-        }
 
         Jump();
     }
@@ -91,13 +80,12 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (coyoteTimer > 0f && jumpBufferTimer > 0f && jumpCount > 0)
+        if (jumpBufferTimer > 0f && jumpCount > 0)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
             jumpCount--;
             jumpBufferTimer = 0f;
-            coyoteTimer = 0f;
         }
     }
 
