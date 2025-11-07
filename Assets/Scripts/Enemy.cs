@@ -6,12 +6,16 @@ public class Enemy : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody enemyRb;
+    [SerializeField] private Transform EnemyTransform;
     [SerializeField] private Collider detectCollider;
     [SerializeField] private Collider collisionCollider;
     [SerializeField] private Animator animator;
     [SerializeField] private Collider attackCollider;
     private NavMeshAgent agent;
     private GameObject player;
+
+    [SerializeField] bool noticePlayer = false;
+    Coroutine patrolCoroutine;
 
     [Header("Settings")]
     [SerializeField] private int health = 3;
@@ -60,6 +64,30 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (noticePlayer)
+        {
+            
+            if (patrolCoroutine != null)
+            {
+                 StopCoroutine(patrolCoroutine);
+                 patrolCoroutine = null;
+            }
+            agent.SetDestination(player.transform.position);
+            agent.isStopped = false;
+
+
+            Debug.Log("Chasing Player");
+        }
+        else if (!noticePlayer)
+        {
+            patrolCoroutine = StartCoroutine(Patrol());
+            Debug.Log("Patrolling");
+        }
+
+
+
+
+
         if (player != null && agent != null && !animator.GetBool("IsDead"))
         {
             if (!animator.GetBool("IsAttacking"))
@@ -68,18 +96,39 @@ public class Enemy : MonoBehaviour
                 animator.SetBool("IsMoving", true);
             }
         }
-        
 
+        //if (noticePlayer)
+        //{
+            
+        //    if (patrolCoroutine != null)
+        //    {
+        //        StopCoroutine(patrolCoroutine);
+        //        patrolCoroutine = null;
+        //    }
+            
+        //    agent.isStopped = false;
+        //    agent.SetDestination(player.transform.position);
+        //}
+        //else
+        //{
+        //    if (patrolCoroutine == null)
+        //    {
+        //        patrolCoroutine = StartCoroutine(Patrol());
+        //    }
+        //}
+    
+    
     }
     private void OnTriggerEnter(Collider other)
     {
         if (player != null && other == player.GetComponent<Collider>())
         {
+            noticePlayer = true;
             agent.isStopped = true;
             animator.SetBool("IsAttacking", true);
             animator.SetBool("IsMoving", false);
             StartCoroutine(AfterAttack());
-           
+            
         }
         
         // Enemy Damage
@@ -117,7 +166,37 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    
+    IEnumerator Patrol()
+    {
+        while (!noticePlayer)
+        {
+            float rotationY = Random.Range(-100, 100);
+            EnemyTransform.Rotate(0, rotationY, 0);
+
+
+            // Move forward a bit in the new direction
+            Vector3 forwardMove = EnemyTransform.position + EnemyTransform.forward * 4f;
+            agent.SetDestination(forwardMove);
+
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
+    //IEnumerator Patrol()
+    //{
+    //    while (!noticePlayer && !animator.GetBool("IsDead"))
+    //    {
+    //        float rotationY = Random.Range(0f, 360f);
+    //        EnemyTransform.Rotate(0, rotationY, 0);
+
+
+    //        // Move forward a bit in the new direction
+    //        Vector3 forwardMove = EnemyTransform.position + EnemyTransform.forward * 4f;
+    //        agent.SetDestination(forwardMove);
+
+    //        yield return new WaitForSeconds(5f);
+    //    }
+    //}
 
 
 }
