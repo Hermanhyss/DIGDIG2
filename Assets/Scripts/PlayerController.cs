@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
 
+    Animator animator;
     ChromaticPulse chromaticPulse;
     ChromaticVignettePulse chromaticVignettePulse;
 
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
         chromaticVignettePulse = FindFirstObjectByType<ChromaticVignettePulse>();
         if (walkingEffect != null)
             walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -58,31 +60,22 @@ public class PlayerController : MonoBehaviour
 
         Vector3 vel = rb.linearVelocity;
 
-        //NOT DONE
-        if (Input.GetKey(KeyCode.D))
+        Vector3 movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+
+        if (movement.magnitude > 0.1f)
         {
-            rb.linearVelocity = transform.forward * playerSpeed;
-            gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+            Quaternion targetRotation = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
+            transform.position += movement.normalized * playerSpeed * Time.deltaTime;
+
+            animator.SetBool("Walking", true);
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
         }
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            rb.linearVelocity = transform.forward * playerSpeed;
-            gameObject.transform.rotation = Quaternion.Euler(0, -90, 0);
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            rb.linearVelocity = transform.forward * playerSpeed;
-            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            rb.linearVelocity = transform.forward * playerSpeed;
-            gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
-        WalkingEffect();
+            WalkingEffect();
     }
 
     void Jump()
