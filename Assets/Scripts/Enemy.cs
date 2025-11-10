@@ -195,7 +195,7 @@ public class Enemy : MonoBehaviour
             EnemyTransform.Rotate(0, rotationY, 0);
 
             // Move forward a bit in the new direction
-            Vector3 forwardMove = EnemyTransform.position + EnemyTransform.forward * 4f;
+            Vector3 forwardMove = EnemyTransform.position + EnemyTransform.forward * 200f;
             agent.SetDestination(forwardMove);
 
             yield return new WaitForSeconds(5f);

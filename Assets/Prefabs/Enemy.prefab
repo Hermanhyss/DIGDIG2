@@ -64,7 +64,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.75531006, z: -0, w: 0.6553676}
   m_LocalPosition: {x: 5.01, y: -0.52, z: -2.64}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1598433426416111548}
@@ -84,10 +84,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   enemyRb: {fileID: 2229290831506132580}
+  EnemyTransform: {fileID: 0}
   detectCollider: {fileID: 7750871289665513010}
   collisionCollider: {fileID: 2513155321737973739}
   animator: {fileID: 4137139139083959559}
   attackCollider: {fileID: 4242873245962622695}
+  noticePlayer: 0
   health: 3
 --- !u!135 &7750871289665513010
 SphereCollider:
