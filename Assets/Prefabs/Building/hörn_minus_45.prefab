@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 766549138512750863}
   - component: {fileID: 8750350068426298237}
   - component: {fileID: 3516496963956439836}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "h\xF6rn_minus_45"
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     public float gravityScale = 1.0f;
     public static float globalGravity = -9.82f;
     [SerializeField] float coyoteTime = 0.2f;
-    float coyoteTimer;
+    
 
     [SerializeField] GameObject walkingEffect;
     ParticleSystem walkingParticleSystem;
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
 
         if (isGrounded && rb.linearVelocity.y <= 0f)
-            jumpCount = 2;
+            jumpCount = 1;
 
         if (Input.GetKeyDown(KeyCode.Space))
             jumpBufferTimer = jumpBufferTime;
@@ -58,24 +58,26 @@ public class PlayerController : MonoBehaviour
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
         rb.AddForce(gravity, ForceMode.Acceleration);
 
-        Vector3 vel = rb.linearVelocity;
-
         Vector3 movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
         if (movement.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
-            transform.position += movement.normalized * playerSpeed * Time.deltaTime;
+
+            Vector3 moveVelocity = movement.normalized * playerSpeed;
+            rb.linearVelocity = new Vector3(moveVelocity.x, rb.linearVelocity.y, moveVelocity.z);
 
             animator.SetBool("Walking", true);
         }
         else
         {
+            
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
             animator.SetBool("Walking", false);
         }
 
-            WalkingEffect();
+        WalkingEffect();
     }
 
     void Jump()
