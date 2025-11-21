@@ -7,7 +7,9 @@ public class PlayerController : MonoBehaviour
     public float gravityScale = 1.0f;
     public static float globalGravity = -9.82f;
     [SerializeField] float coyoteTime = 0.2f;
-    
+    [SerializeField] float peak;
+    [SerializeField] float extraGravity;    
+
 
     [SerializeField] GameObject walkingEffect;
     ParticleSystem walkingParticleSystem;
@@ -34,7 +36,7 @@ public class PlayerController : MonoBehaviour
         chromaticVignettePulse = FindFirstObjectByType<ChromaticVignettePulse>();
         if (walkingEffect != null)
             walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -43,20 +45,42 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
 
         if (isGrounded && rb.linearVelocity.y <= 0f)
+        {
             jumpCount = 1;
+            animator.SetBool("Land", true);
+        }
+        else
+        {
+            animator.SetBool("Land", false);
+            animator.SetBool("Jump", false);
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             jumpBufferTimer = jumpBufferTime;
+            animator.SetBool("Jump", true);
+        }
         else
+        {
             jumpBufferTimer -= Time.deltaTime;
+        }
 
         Jump();
     }
 
     private void FixedUpdate()
     {
-        Vector3 gravity = globalGravity * gravityScale * Vector3.up;
-        rb.AddForce(gravity, ForceMode.Acceleration);
+        //Vector3 gravity = globalGravity * gravityScale * Vector3.up;
+        //rb.AddForce(gravity, ForceMode.Acceleration);
+
+        if (rb.linearVelocity.y < peak && rb.linearVelocity.y > -peak)
+        {
+            
+        }
+        else
+        {
+            rb.AddForce(-transform.up * extraGravity);
+        }
 
         Vector3 movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
