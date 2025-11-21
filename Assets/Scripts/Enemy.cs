@@ -7,28 +7,16 @@ public class Enemy : MonoBehaviour
     [Header("References")]
     [SerializeField] private Rigidbody enemyRb;
     [SerializeField] private Transform EnemyTransform;
-    [SerializeField] private Collider detectCollider;
-    [SerializeField] private Collider collisionCollider;
+    [SerializeField] private Collider collisionCollider; // Attack range
     [SerializeField] private Animator animator;
-    [SerializeField] private Collider attackCollider;
+    [SerializeField] private Collider attackCollider;    // Deals damage
     private NavMeshAgent agent;
     private GameObject player;
 
-    [Header("Patrol Settings")]
-    public Transform[] checkpoints;
-    public float checkpointThreshold = 0.5f;
-    public float minWaitTime = 3f;
-    public float maxWaitTime = 5f;
-    private int currentCheckpointIndex = 0;
-    private bool isWaiting = false;
-
-    [Header("Vision Settings")]
-    public float viewDistance = 10f;
-    public float viewAngle = 90f;
-    public LayerMask obstacleMask;
-
     [Header("Settings")]
     [SerializeField] private int health = 3;
+
+    private bool canAttack = true;
 
     private void Awake()
     {
@@ -38,116 +26,29 @@ public class Enemy : MonoBehaviour
         {
             player = playerController.gameObject;
         }
-    }
-
-    private void Start()
-    {
-        if (checkpoints != null && checkpoints.Length > 0)
-        {
-            agent.SetDestination(checkpoints[currentCheckpointIndex].position);
-        }
+        if (attackCollider != null)
+            attackCollider.enabled = false;
     }
 
     private void Update()
     {
         if (animator.GetBool("IsDead")) return;
 
-        // Vision check
-        if (CanSeePlayer())
+        if (player != null)
         {
-            if (player != null)
+            agent.SetDestination(player.transform.position);
+
+            // Only set IsMoving if not attacking
+            if (!animator.GetBool("IsAttacking"))
             {
-                agent.SetDestination(player.transform.position);
                 animator.SetBool("IsMoving", true);
-                Debug.Log("Player detected!");
             }
-            return;
-        }
-
-        // Patrol logic
-        if (checkpoints == null || checkpoints.Length == 0 || isWaiting) return;
-
-        if (!agent.pathPending && agent.remainingDistance <= checkpointThreshold)
-        {
-            StartCoroutine(LookAroundAndMove());
-        }
-    }
-
-    IEnumerator LookAroundAndMove()
-    {
-        isWaiting = true;
-        agent.isStopped = true;
-
-        float waitTime = Random.Range(minWaitTime, maxWaitTime);
-        float elapsed = 0f;
-
-        while (elapsed < waitTime)
-        {
-            // Optional: Rotate to simulate looking around
-            transform.Rotate(0, 60f * Time.deltaTime, 0);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        agent.isStopped = false;
-        currentCheckpointIndex = (currentCheckpointIndex + 1) % checkpoints.Length;
-        agent.SetDestination(checkpoints[currentCheckpointIndex].position);
-        isWaiting = false;
-    }
-
-    bool CanSeePlayer()
-    {
-        Collider[] targetsInView = Physics.OverlapSphere(transform.position, viewDistance);
-
-        foreach (var target in targetsInView)
-        {
-            if (target.CompareTag("Player"))
+            else
             {
-                Vector3 dirToTarget = (target.transform.position - transform.position).normalized;
-                float angleToTarget = Vector3.Angle(transform.forward, dirToTarget);
-
-                if (angleToTarget < viewAngle / 2f)
-                {
-                    float distToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-                    if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
-        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
-        Gizmos.DrawRay(transform.position, leftBoundary * viewDistance);
-        Gizmos.DrawRay(transform.position, rightBoundary * viewDistance);
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
-
-        Collider[] targetsInView = Physics.OverlapSphere(transform.position, viewDistance);
-        foreach (var target in targetsInView)
-        {
-            if (target.CompareTag("Player"))
-            {
-                Vector3 dirToTarget = (target.transform.position - transform.position).normalized;
-                float angleToTarget = Vector3.Angle(transform.forward, dirToTarget);
-                float distToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-                if (angleToTarget < viewAngle / 2f)
-                {
-                    bool blocked = Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask);
-                    Gizmos.color = blocked ? Color.red : Color.green;
-                    Gizmos.DrawLine(transform.position, target.transform.position);
-                }
+                animator.SetBool("IsMoving", false);
             }
         }
     }
-
 
     public void OnAttackAnimationEvent()
     {
@@ -161,51 +62,65 @@ public class Enemy : MonoBehaviour
         Debug.Log("Disabling attack collider");
         if (attackCollider != null)
             attackCollider.enabled = false;
+        
     }
 
-    IEnumerator AfterAttack()
-    {
-        if (player != null)
-        {
-            Debug.Log("Enemy has finished attacking");
-            yield return new WaitForSeconds(3.0f);
-            agent.isStopped = false;
-            animator.SetBool("IsAttacking", false);
-            animator.SetBool("IsMoving", true);
-        }
-        yield return null;
-    }
-
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (player != null && other == player.GetComponent<Collider>())
+        
+        if (collisionCollider != null && other == player.GetComponent<Collider>())
         {
             agent.isStopped = true;
             animator.SetBool("IsAttacking", true);
             animator.SetBool("IsMoving", false);
-            StartCoroutine(AfterAttack());
         }
-
-        if (other.CompareTag("Player"))
+        
+        if (attackCollider != null && other != null && other.gameObject == player && attackCollider.enabled)
         {
-            Debug.Log("Doing attack!");
             var playerController = other.GetComponent<PlayerController>();
             if (playerController != null)
             {
-                // playerController.TakeDamage(1);
-                Debug.Log("Doing attack!");
+               // playerController.TakeDamage(1); 
+                Debug.Log("Player took damage from enemy attack!");
             }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player") && canAttack)
+        {
+            agent.isStopped = true;
+            animator.SetBool("IsAttacking", true);
+            animator.SetBool("IsMoving", false);
+            canAttack = false;
+            StartCoroutine(AttackCooldown());
+
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (player != null && other == player.GetComponent<Collider>())
+        if (collisionCollider != null && other == player.GetComponent<Collider>())
         {
-            agent.isStopped = false;
-            animator.SetBool("IsMoving", true);
-            animator.SetBool("IsAttacking", false);
+            StartCoroutine(BeforeMoving());     
         }
+    }
+
+    private IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(1f);
+        animator.SetBool("IsAttacking", false);
+        canAttack = true;
+    }
+
+    private IEnumerator BeforeMoving()
+    {
+        yield return new WaitForSeconds(1f);
+        agent.isStopped = false;
+        animator.SetBool("IsMoving", true);
+        animator.SetBool("IsAttacking", false);
     }
 
     public void TakeDamage(int amount)
