@@ -34,18 +34,15 @@ public class Enemy : MonoBehaviour
     {
         if (animator.GetBool("IsDead")) return;
 
-        if (player != null)
+       if (player != null)
         {
             agent.SetDestination(player.transform.position);
 
-            // Only set IsMoving if not attacking
-            if (!animator.GetBool("IsAttacking"))
+            bool shouldMove = !animator.GetBool("IsAttacking");
+           
+            if (animator.GetBool("IsMoving") != shouldMove)
             {
-                animator.SetBool("IsMoving", true);
-            }
-            else
-            {
-                animator.SetBool("IsMoving", false);
+                animator.SetBool("IsMoving", shouldMove);
             }
         }
     }
@@ -117,7 +114,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator BeforeMoving()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         agent.isStopped = false;
         animator.SetBool("IsMoving", true);
         animator.SetBool("IsAttacking", false);
