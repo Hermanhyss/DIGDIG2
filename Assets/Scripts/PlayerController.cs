@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
 
+    bool canMove;
     Animator animator;
     ChromaticPulse chromaticPulse;
     ChromaticVignettePulse chromaticVignettePulse;
@@ -65,6 +66,20 @@ public class PlayerController : MonoBehaviour
             jumpBufferTimer -= Time.deltaTime;
         }
 
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            canMove = false;
+            rb.linearVelocity = Vector3.zero;
+            animator.SetTrigger("Attack light");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            canMove = false;
+            rb.linearVelocity = Vector3.zero;
+            animator.SetTrigger("Heavy");
+        }
+
         Jump();
     }
 
@@ -84,22 +99,31 @@ public class PlayerController : MonoBehaviour
 
         Vector3 movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
-        if (movement.magnitude > 0.1f)
+        if (canMove)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(movement);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
+            if (movement.magnitude > 0.1f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(movement);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
 
-            Vector3 moveVelocity = movement.normalized * playerSpeed;
-            rb.linearVelocity = new Vector3(moveVelocity.x, rb.linearVelocity.y, moveVelocity.z);
+                Vector3 moveVelocity = movement.normalized * playerSpeed;
+                rb.linearVelocity = new Vector3(moveVelocity.x, rb.linearVelocity.y, moveVelocity.z);
 
-            animator.SetBool("Walking", true);
+                animator.SetBool("Walking", true);
+            }
+            else
+            {
+
+                rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+                animator.SetBool("Walking", false);
+            }
         }
         else
         {
-            
             rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
             animator.SetBool("Walking", false);
         }
+
 
         WalkingEffect();
     }
@@ -130,7 +154,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 if (walkingParticleSystem.isPlaying)
-                    walkingParticleSystem.Stop();   
+                    walkingParticleSystem.Stop();
             }
         }
     }
