@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject optionsMenuCanvas;
     [SerializeField] GameObject quitMenuCanvas;
-
+    [SerializeField] GameObject Blur;
     bool paused;
 
     private void Update()
@@ -21,11 +21,13 @@ public class UIManager : MonoBehaviour
         if (paused)
         {
             pauseMenu.SetActive(true);
+            Blur.SetActive(true);
             Time.timeScale = 0f;
         }
         else
         {
             pauseMenu.SetActive(false);
+            Blur.SetActive(false);
             Time.timeScale = 1f;
         }
     }
