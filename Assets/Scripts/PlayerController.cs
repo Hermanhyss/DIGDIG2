@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
 
-    bool canMove;
+    bool canMove = true;
     Animator animator;
     ChromaticPulse chromaticPulse;
     ChromaticVignettePulse chromaticVignettePulse;
