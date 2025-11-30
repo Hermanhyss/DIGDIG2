@@ -34,8 +34,9 @@ public class UIManager : MonoBehaviour
 
     public void EnterOptions()
     {
-        optionsMenuCanvas.SetActive(true);
         pauseMenu.SetActive(false);
+        optionsMenuCanvas.SetActive(true);
+        Debug.Log("Entered Options");
     }
     public void CloseOptions()
     {
@@ -47,6 +48,7 @@ public class UIManager : MonoBehaviour
     {
         quitMenuCanvas.SetActive(true);
         pauseMenu.SetActive(false);
+        Debug.Log("Entered Quit");
     }
 
     public void CloseQuit()
