@@ -68,19 +68,27 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            canMove = false;
-            rb.linearVelocity = Vector3.zero;
+            animator.SetBool("IsAttacking", true);
             animator.SetTrigger("Attack light");
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            canMove = false;
-            rb.linearVelocity = Vector3.zero;
+            animator.SetBool("IsAttacking", true);
             animator.SetTrigger("Heavy");
         }
 
-        Jump();
+        if (animator.GetBool("IsAttacking"))
+        {
+            canMove = false;
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
+        else
+        {
+            canMove = true;
+        }
+
+            Jump();
     }
 
     private void FixedUpdate()
@@ -88,11 +96,7 @@ public class PlayerController : MonoBehaviour
         //Vector3 gravity = globalGravity * gravityScale * Vector3.up;
         //rb.AddForce(gravity, ForceMode.Acceleration);
 
-        if (rb.linearVelocity.y < peak && rb.linearVelocity.y > -peak)
-        {
-            
-        }
-        else
+        if (rb.linearVelocity.y >= peak || rb.linearVelocity.y <= -peak)
         {
             rb.AddForce(-transform.up * extraGravity);
         }
