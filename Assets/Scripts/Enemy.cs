@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     private GameObject player;
 
     [Header("Settings")]
-    [SerializeField] private int health = 3;
+    [SerializeField] public int health = 3;
 
     private bool canAttack = true;
 

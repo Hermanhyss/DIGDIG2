@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
 
+
     bool canMove = true;
     Animator animator;
     ChromaticPulse chromaticPulse;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
         if (walkingEffect != null)
             walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
+
     }
 
     private void Update()
