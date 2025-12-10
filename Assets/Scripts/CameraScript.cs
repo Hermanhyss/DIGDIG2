@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CameraScript : MonoBehaviour
 {
@@ -7,24 +8,29 @@ public class CameraScript : MonoBehaviour
     [SerializeField] private float zOffset = 2f;
     [SerializeField] private float minZ = -10f; 
     [SerializeField] private float maxZ = 10f;  
+    [SerializeField] private float fadeAlpha = 0.3f; // Target alpha for faded objects
 
     private Vector3 velocity = Vector3.zero;
+    private List<FadeObject> lastFadedObjects = new List<FadeObject>();
 
     void Update()
     {
         if (player == null) return;
 
-       
         float targetZ = player.position.z + zOffset;
-
-       
         targetZ = Mathf.Clamp(targetZ, minZ, maxZ);
 
         Vector3 targetPosition = new Vector3(player.position.x, transform.position.y, targetZ);
-
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
-        
+        // Raycast from camera to player
+        Vector3 directionToPlayer = player.position - transform.position;
+        float distanceToPlayer = directionToPlayer.magnitude;
+
+        // Fade logic
+        FadeObjectsBetweenCameraAndPlayer(directionToPlayer, distanceToPlayer);
+
+        // Debug lines (optional)
         Debug.DrawLine(
             new Vector3(transform.position.x - 10, transform.position.y, minZ),
             new Vector3(transform.position.x + 10, transform.position.y, minZ),
@@ -35,5 +41,30 @@ public class CameraScript : MonoBehaviour
             new Vector3(transform.position.x + 10, transform.position.y, maxZ),
             Color.green
         );
+    }
+
+    private void FadeObjectsBetweenCameraAndPlayer(Vector3 directionToPlayer, float distanceToPlayer)
+    {
+        // Restore previous faded objects
+        foreach (var faded in lastFadedObjects)
+        {
+            if (faded != null)
+                faded.SetAlpha(1f);
+        }
+        lastFadedObjects.Clear();
+
+        // RaycastAll to find all objects between camera and player
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, directionToPlayer.normalized, distanceToPlayer);
+        foreach (var hit in hits)
+        {
+            if (hit.transform == player) continue;
+
+            FadeObject fadeObj = hit.transform.GetComponent<FadeObject>();
+            if (fadeObj != null)
+            {
+                fadeObj.SetAlpha(fadeAlpha);
+                lastFadedObjects.Add(fadeObj);
+            }
+        }
     }
 }
