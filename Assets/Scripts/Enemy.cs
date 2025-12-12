@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator BeforeMoving()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         agent.isStopped = false;
         animator.SetBool("IsMoving", true);
         animator.SetBool("IsAttacking", false);
