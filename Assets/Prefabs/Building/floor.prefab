@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5856730273256722036}
   - component: {fileID: 8365812330058850440}
   - component: {fileID: 6155146827363841445}
-  - component: {fileID: 8917813990879384640}
   m_Layer: 6
   m_Name: floor
   m_TagString: Untagged
@@ -112,15 +111,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 0.28034267, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8917813990879384640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1530832376943980404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019544d966cf97643aac69a96db55570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FadeObject
