@@ -31,6 +31,13 @@ public class PlayerController : MonoBehaviour
     ChromaticPulse chromaticPulse;
     ChromaticVignettePulse chromaticVignettePulse;
 
+    public float cooldownTime = 2f;
+    private float nextFireTime = 0f;
+    public static int noOfClicks = 0;
+    float lastClickedTime = 0;
+    float maxComboDelay = 1;
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -68,16 +75,30 @@ public class PlayerController : MonoBehaviour
             jumpBufferTimer -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light"))
         {
-            animator.SetBool("IsAttacking", true);
-            animator.SetTrigger("Attack light");
+            animator.SetBool("Attack light", false);
+        }
+        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light 2"))
+        {
+            animator.SetBool("Attack light 2", false);
+            noOfClicks = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+
+        if (Time.time - lastClickedTime > maxComboDelay)
         {
-            animator.SetBool("IsAttacking", true);
-            animator.SetTrigger("Heavy");
+            noOfClicks = 0;
+        }
+
+        //cooldown time
+        if (Time.time > nextFireTime)
+        {
+            // Check for mouse input
+            if (Input.GetMouseButtonDown(0))
+            {
+                OnClick();
+            }
         }
 
         if (animator.GetBool("IsAttacking"))
@@ -95,9 +116,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Vector3 gravity = globalGravity * gravityScale * Vector3.up;
-        //rb.AddForce(gravity, ForceMode.Acceleration);
-
         if (rb.linearVelocity.y >= peak || rb.linearVelocity.y <= -peak)
         {
             rb.AddForce(-transform.up * extraGravity);
@@ -132,6 +150,29 @@ public class PlayerController : MonoBehaviour
 
 
         WalkingEffect();
+    }
+
+    void OnClick()
+    {
+        lastClickedTime = Time.time;
+        noOfClicks++;
+
+        if (noOfClicks == 1)
+        {
+            animator.SetBool("IsAttacking", true);
+            animator.SetBool("Attack light", true);
+        }
+
+        noOfClicks = Mathf.Clamp(noOfClicks, 0, 2);
+
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (noOfClicks >= 2 && st.normalizedTime > 0.7f && st.IsName("Attack light"))
+        {
+            animator.SetBool("Attack light", false);
+            animator.SetBool("Attack light 2", true);
+        }
+
     }
 
     void Jump()
