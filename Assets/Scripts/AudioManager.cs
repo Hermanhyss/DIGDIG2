@@ -1,16 +1,28 @@
 using UnityEngine;
 using System;
 
+public enum SoundType
+{
+    Jump,
+    Attack,
+    Damage,
+    Buttons,
+    UI,
+    BackgroundMusic,
+    BackgroundSounds,
+}
+
+[RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    [Header("Audio Sources")]
-    public AudioSource musicSource;
-    public AudioSource sfxSource;
+    [SerializeField] private AudioClip[] soundList;
+    private AudioSource audioSource;
 
     private void Awake()
     {
+        // Proper singleton guard
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -21,33 +33,39 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // --- Music ---
-    public void PlayMusic(AudioClip clip, bool loop = true)
+    private void Start()
     {
-        musicSource.clip = clip;
-        musicSource.loop = loop;
-        musicSource.Play();
+        audioSource = GetComponent<AudioSource>();
     }
 
-    public void StopMusic()
+    public static void PlaySound(SoundType sound, float volume = 1f)
     {
-        musicSource.Stop();
+        if (Instance == null || Instance.soundList == null)
+            return;
+
+        int index = (int)sound;
+        if (index < 0 || index >= Instance.soundList.Length)
+            return;
+
+        AudioClip clip = Instance.soundList[index];
+        if (clip != null)
+        {
+            Instance.audioSource.PlayOneShot(clip, volume);
+        }
+    }
+    public void PlayMusic(SoundType sound, float volume = 1f)
+    {
+        int index = (int)sound;
+        AudioClip clip = soundList[index];
+        audioSource.clip = clip;
+        audioSource.loop = true;
+        audioSource.volume = volume;
+        audioSource.Play();
+    }
+    public static void SetVolume(float volume)
+    {
+        if (Instance != null)
+            Instance.audioSource.volume = volume;
     }
 
-    // --- SFX ---
-    public void PlaySFX(AudioClip clip)
-    {
-        sfxSource.PlayOneShot(clip);
-    }
-
-    // --- Volume Controls ---
-    public void SetMusicVolume(float volume)
-    {
-        musicSource.volume = volume;
-    }
-
-    public void SetSFXVolume(float volume)
-    {
-        sfxSource.volume = volume;
-    }
 }
