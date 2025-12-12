@@ -21077,7 +21077,10 @@ MonoBehaviour:
   smoothTime: 0.3
   zOffset: -10
   minZ: -30
-  maxZ: -25
+  maxZ: -20
+  minY: -24.5
+  maxY: 24.5
+  offsetY: 1.5
   fadeAlpha: 0.3
 --- !u!1001 &952959515
 PrefabInstance:
@@ -40297,6 +40300,10 @@ MonoBehaviour:
   animator: {fileID: 1770947778}
   attackCollider: {fileID: 1770947782}
   health: 3
+  patrolPoints: []
+  playerDetectionRange: 10
+  viewAngle: 90
+  viewDistance: 10
 --- !u!4 &1770947785
 Transform:
   m_ObjectHideFlags: 0
