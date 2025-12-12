@@ -16,13 +16,13 @@ public class Enemy : MonoBehaviour
     [Header("Settings")]
     [SerializeField] public int health = 3;
     [SerializeField] private Transform[] patrolPoints;
-    [SerializeField] private float playerDetectionRange = 10f;
     [SerializeField, Range(0, 360)] private float viewAngle = 90f;
     [SerializeField] private float viewDistance = 10f;
 
     private int currentPatrolIndex = 0;
     private bool canAttack = true;
     private bool isChasingPlayer = false;
+    private bool hasSpottedPlayer = false;
 
     private void Awake()
     {
@@ -40,8 +40,10 @@ public class Enemy : MonoBehaviour
     {
         if (animator.GetBool("IsDead")) return;
 
-        if (PlayerInSight())
+        // If the player has ever been spotted, always chase
+        if (hasSpottedPlayer || PlayerInSight())
         {
+            hasSpottedPlayer = true;
             isChasingPlayer = true;
             agent.SetDestination(player.transform.position);
         }
@@ -86,26 +88,26 @@ public class Enemy : MonoBehaviour
         Debug.Log("Disabling attack collider");
         if (attackCollider != null)
             attackCollider.enabled = false;
-        
+
     }
 
-    
+
     private void OnTriggerEnter(Collider other)
     {
-        
+
         if (collisionCollider != null && other == player.GetComponent<Collider>())
         {
             agent.isStopped = true;
             animator.SetBool("IsAttacking", true);
             animator.SetBool("IsMoving", false);
         }
-        
+
         if (attackCollider != null && other != null && other.gameObject == player && attackCollider.enabled)
         {
             var playerController = other.GetComponent<PlayerController>();
             if (playerController != null)
             {
-               // playerController.TakeDamage(1); 
+                // playerController.TakeDamage(1); 
                 Debug.Log("Player took damage from enemy attack!");
             }
         }
@@ -128,7 +130,7 @@ public class Enemy : MonoBehaviour
     {
         if (collisionCollider != null && other == player.GetComponent<Collider>())
         {
-            StartCoroutine(BeforeMoving());     
+            StartCoroutine(BeforeMoving());
         }
     }
 
@@ -158,24 +160,76 @@ public class Enemy : MonoBehaviour
     }
 
     private bool PlayerInSight()
-{
-    if (player == null) return false;
-
-    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-    float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-    if (distanceToPlayer > viewDistance) return false;
-
-    float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-    if (angleToPlayer > viewAngle * 0.5f) return false;
-
-    // Optional: Raycast to check for obstacles between enemy and player
-    if (Physics.Raycast(transform.position + Vector3.up * 0.5f, directionToPlayer, out RaycastHit hit, viewDistance))
     {
-        if (hit.collider.gameObject != player)
+        if (player == null) return false;
+
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer > viewDistance) return false;
+
+        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+        if (angleToPlayer > viewAngle * 0.5f) return false;
+
+        // Raycast to check for clear line of sight between enemy and player
+        Ray ray = new Ray(transform.position + Vector3.up * 0.5f, directionToPlayer);
+        if (Physics.Raycast(ray, out RaycastHit hit, viewDistance))
+        {
+            // If the first thing hit isn't the player, line of sight is blocked
+            if (hit.collider.gameObject != player)
+                return false;
+        }
+        else
+        {
+            // Nothing was hit, so no line of sight
             return false;
+        }
+
+        return true;
     }
 
-    return true;
-}
+    private void OnDrawGizmosSelected()
+    {
+        // Draw view distance
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, viewDistance);
+
+        // Draw view angle
+        Vector3 forward = transform.forward;
+        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle * 0.5f, 0) * forward;
+        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle * 0.5f, 0) * forward;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + leftBoundary * viewDistance);
+        Gizmos.DrawLine(transform.position, transform.position + rightBoundary * viewDistance);
+
+        // Draw the raycast for line of sight (even in edit mode if player is assigned)
+        if (player != null)
+        {
+            Vector3 origin = transform.position + Vector3.up * 0.5f;
+            Vector3 direction = (player.transform.position - transform.position).normalized;
+            float distance = Mathf.Min(viewDistance, Vector3.Distance(transform.position, player.transform.position));
+
+            // Perform the same raycast as in PlayerInSight
+            Ray ray = new Ray(origin, direction);
+            if (Physics.Raycast(ray, out RaycastHit hit, viewDistance))
+            {
+                Gizmos.color = hit.collider.gameObject == player ? Color.green : Color.magenta;
+                Gizmos.DrawLine(origin, hit.point);
+                Gizmos.DrawWireSphere(hit.point, 0.2f);
+            }
+            else
+            {
+                Gizmos.color = Color.gray;
+                Gizmos.DrawLine(origin, origin + direction * viewDistance);
+            }
+        }
+
+        // Optionally, draw a line to the player if in sight during play mode
+        if (Application.isPlaying && player != null && PlayerInSight())
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, player.transform.position);
+        }
+    }
 }
