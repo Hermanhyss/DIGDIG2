@@ -15,8 +15,14 @@ public class Enemy : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] public int health = 3;
+    [SerializeField] private Transform[] patrolPoints;
+    [SerializeField] private float playerDetectionRange = 10f;
+    [SerializeField, Range(0, 360)] private float viewAngle = 90f;
+    [SerializeField] private float viewDistance = 10f;
 
+    private int currentPatrolIndex = 0;
     private bool canAttack = true;
+    private bool isChasingPlayer = false;
 
     private void Awake()
     {
@@ -34,16 +40,37 @@ public class Enemy : MonoBehaviour
     {
         if (animator.GetBool("IsDead")) return;
 
-       if (player != null)
+        if (PlayerInSight())
         {
+            isChasingPlayer = true;
             agent.SetDestination(player.transform.position);
+        }
+        else
+        {
+            isChasingPlayer = false;
+            Patrol();
+        }
 
-            bool shouldMove = !animator.GetBool("IsAttacking");
-           
-            if (animator.GetBool("IsMoving") != shouldMove)
-            {
-                animator.SetBool("IsMoving", shouldMove);
-            }
+        bool shouldMove = !animator.GetBool("IsAttacking");
+        if (animator.GetBool("IsMoving") != shouldMove)
+        {
+            animator.SetBool("IsMoving", shouldMove);
+        }
+    }
+
+    private void Patrol()
+    {
+        // Patrol implementation here
+        if (patrolPoints.Length == 0) return;
+
+        // Set the destination to the current patrol point
+        agent.SetDestination(patrolPoints[currentPatrolIndex].position);
+
+        // Check if the enemy has reached the patrol point
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            // Switch to the next patrol point
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
         }
     }
 
@@ -129,4 +156,26 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject, 1.5f);
         }
     }
+
+    private bool PlayerInSight()
+{
+    if (player == null) return false;
+
+    Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+    float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+    if (distanceToPlayer > viewDistance) return false;
+
+    float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+    if (angleToPlayer > viewAngle * 0.5f) return false;
+
+    // Optional: Raycast to check for obstacles between enemy and player
+    if (Physics.Raycast(transform.position + Vector3.up * 0.5f, directionToPlayer, out RaycastHit hit, viewDistance))
+    {
+        if (hit.collider.gameObject != player)
+            return false;
+    }
+
+    return true;
+}
 }
