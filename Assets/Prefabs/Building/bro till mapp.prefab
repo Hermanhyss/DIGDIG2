@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1761027742796701401}
   - component: {fileID: 914984212389304182}
   - component: {fileID: 5320897415382672813}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bro till mapp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7791486788655378091, guid: 8f1f03c65dbdb6b4dbcf29d660a502e3, type: 3}
+  - {fileID: 2100000, guid: ce357c45196164e4b84c3e41f8ac1b6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

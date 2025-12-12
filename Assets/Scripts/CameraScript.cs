@@ -8,6 +8,9 @@ public class CameraScript : MonoBehaviour
     [SerializeField] private float zOffset = 2f;
     [SerializeField] private float minZ = -10f; 
     [SerializeField] private float maxZ = 10f;  
+    [SerializeField] private float minY = -5f;   // Added minY
+    [SerializeField] private float maxY = 5f;    // Added maxY
+    [SerializeField] private float offsetY = 0f; // Added offsetY
     [SerializeField] private float fadeAlpha = 0.3f; // Target alpha for faded objects
 
     private Vector3 velocity = Vector3.zero;
@@ -20,7 +23,10 @@ public class CameraScript : MonoBehaviour
         float targetZ = player.position.z + zOffset;
         targetZ = Mathf.Clamp(targetZ, minZ, maxZ);
 
-        Vector3 targetPosition = new Vector3(player.position.x, transform.position.y, targetZ);
+        float targetY = player.position.y + offsetY;
+        targetY = Mathf.Clamp(targetY, minY, maxY);
+
+        Vector3 targetPosition = new Vector3(player.position.x, targetY, targetZ);
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
         // Raycast from camera to player
@@ -30,7 +36,7 @@ public class CameraScript : MonoBehaviour
         // Fade logic
         FadeObjectsBetweenCameraAndPlayer(directionToPlayer, distanceToPlayer);
 
-        // Debug lines (optional)
+        // Debug lines for Z
         Debug.DrawLine(
             new Vector3(transform.position.x - 10, transform.position.y, minZ),
             new Vector3(transform.position.x + 10, transform.position.y, minZ),
@@ -40,6 +46,18 @@ public class CameraScript : MonoBehaviour
             new Vector3(transform.position.x - 10, transform.position.y, maxZ),
             new Vector3(transform.position.x + 10, transform.position.y, maxZ),
             Color.green
+        );
+
+        // Debug lines for Y
+        Debug.DrawLine(
+            new Vector3(transform.position.x - 10, minY, transform.position.z),
+            new Vector3(transform.position.x + 10, minY, transform.position.z),
+            Color.blue
+        );
+        Debug.DrawLine(
+            new Vector3(transform.position.x - 10, maxY, transform.position.z),
+            new Vector3(transform.position.x + 10, maxY, transform.position.z),
+            Color.yellow
         );
     }
 
