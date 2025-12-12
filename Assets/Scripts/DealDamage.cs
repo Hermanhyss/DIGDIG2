@@ -3,7 +3,6 @@ using UnityEngine;
 public class DealDamage : MonoBehaviour
 {
     [SerializeField] private int damage;
-
     Collider weaponCollider;
     private void Start()
     {
@@ -14,8 +13,9 @@ public class DealDamage : MonoBehaviour
     {
         var enemy = other.GetComponent<Enemy>();
         if (enemy != null)
+        {
             enemy.TakeDamage(damage);
-
+        }
     }
 
     public void EnableWeaponCollider()
