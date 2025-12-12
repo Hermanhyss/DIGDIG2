@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 526418177289337415}
   - component: {fileID: 6405938893827771631}
   - component: {fileID: 8869740733110463593}
+  - component: {fileID: 8921237543143286797}
   m_Layer: 0
   m_Name: wall
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6271573414225017425, guid: 461baf2aea0eff646911dfb2fefa4e69, type: 3}
+  - {fileID: 2100000, guid: f49b79daacd39374a84ef02334da12c4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -111,3 +112,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.0000153, y: 2.9281652, z: 0.93011284}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8921237543143286797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7507828624325608159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019544d966cf97643aac69a96db55570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FadeObject
