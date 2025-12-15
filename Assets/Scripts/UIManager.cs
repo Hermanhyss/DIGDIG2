@@ -33,29 +33,35 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void EnterContinue()
+    {
+        paused = !paused;
+        Debug.Log("Continued Game");
+    }
+
     public void EnterOptions()
     {
-        pauseMenu.SetActive(false);
+        paused = false;
         optionsMenuCanvas.SetActive(true);
         Debug.Log("Entered Options");
     }
     public void CloseOptions()
     {
         optionsMenuCanvas.SetActive(false);
-        pauseMenu.SetActive(true);
+        paused = true;
     }
     //Quit
     public void EnterQuit()
     {
         quitMenuCanvas.SetActive(true);
-        pauseMenu.SetActive(false);
+        paused = false;
         Debug.Log("Entered Quit");
     }
 
     public void CloseQuit()
     {
         quitMenuCanvas.SetActive(false);
-        pauseMenu.SetActive(true);
+        paused = true;
     }
 
     public void QuitGame()
