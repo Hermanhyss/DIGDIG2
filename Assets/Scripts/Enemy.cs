@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator BeforeMoving()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         agent.isStopped = false;
         animator.SetBool("IsMoving", true);
         animator.SetBool("IsAttacking", false);
@@ -154,10 +154,26 @@ public class Enemy : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
-            animator.SetBool("IsDead", true);
-            Destroy(gameObject, 1.5f);
+            EnemyDie();      
         }
     }
+
+    public void EnemyDie()
+    {
+        animator.SetBool("IsDead", true);
+
+        agent.isStopped = true;
+        agent.ResetPath();
+        agent.velocity = Vector3.zero;
+
+        enemyRb.linearVelocity = Vector3.zero;
+        enemyRb.angularVelocity = Vector3.zero;
+        enemyRb.isKinematic = true;
+
+        collisionCollider.enabled = false;
+        attackCollider.enabled = false;
+    }
+  
 
     private bool PlayerInSight()
     {
