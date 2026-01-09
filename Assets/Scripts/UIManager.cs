@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +13,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject Blur;
     bool paused;
 
+    [SerializeField] List<Image> buttonsImages;
+    [SerializeField] Sprite originalButtonImage;
+
+
     
     private void Update()
     {
@@ -18,11 +24,17 @@ public class UIManager : MonoBehaviour
         {
             paused = !paused;
             Debug.Log("Pressed escape");
+
+            pauseMenu.SetActive(true);
+
+            foreach (Image buttonImage in buttonsImages)
+            {
+                buttonImage.sprite = originalButtonImage;
+            }
         }
 
         if (paused)
         {
-            pauseMenu.SetActive(true);
             Blur.SetActive(true);
             Time.timeScale = 0f;
         }
@@ -42,27 +54,29 @@ public class UIManager : MonoBehaviour
 
     public void EnterOptions()
     {
-        paused = false;
+        paused = true;
         optionsMenuCanvas.SetActive(true);
+        pauseMenu.SetActive(false);
         Debug.Log("Entered Options");
     }
     public void CloseOptions()
     {
         optionsMenuCanvas.SetActive(false);
-        paused = true;
+        pauseMenu.SetActive(true);
+
     }
     //Quit
     public void EnterQuit()
     {
         quitMenuCanvas.SetActive(true);
-        paused = false;
+        pauseMenu.SetActive(false);
         Debug.Log("Entered Quit");
     }
 
     public void CloseQuit()
     {
         quitMenuCanvas.SetActive(false);
-        paused = true;
+        pauseMenu.SetActive(true);
     }
 
     public void QuitGame()
