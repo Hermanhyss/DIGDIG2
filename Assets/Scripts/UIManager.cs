@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject Blur;
     bool paused;
 
+    
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
