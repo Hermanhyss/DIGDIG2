@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class DoorFunction : MonoBehaviour
 {
-    public Animator animator;
-    public bool DoorOpen = false;
+    private Animator animator;
+    private bool DoorOpen = false;
 
     void Start()
     {
