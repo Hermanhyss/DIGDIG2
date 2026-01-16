@@ -8,15 +8,14 @@ public class PlayerController : MonoBehaviour
     public static float globalGravity = -9.82f;
     [SerializeField] float coyoteTime = 0.2f;
     [SerializeField] float peak;
-    [SerializeField] float extraGravity;    
-
+    [SerializeField] float extraGravity;
+    bool isRunning;
 
     [SerializeField] GameObject walkingEffect;
     ParticleSystem walkingParticleSystem;
 
     [SerializeField] float jumpBufferTime = 0.2f;
     float jumpBufferTimer;
-    int jumpCount = 2;
 
     [SerializeField] bool isGrounded;
     [SerializeField] LayerMask Ground;
@@ -56,7 +55,6 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded && rb.linearVelocity.y <= 0f)
         {
-            jumpCount = 1;
             animator.SetBool("Land", true);
         }
         else
@@ -111,7 +109,8 @@ public class PlayerController : MonoBehaviour
             canMove = true;
         }
 
-            Jump();
+        Jump();
+        Running();
     }
 
     private void FixedUpdate()
@@ -172,17 +171,36 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("Attack light", false);
             animator.SetBool("Attack light 2", true);
         }
-
     }
 
     void Jump()
     {
-        if (jumpBufferTimer > 0f && jumpCount > 0)
+        if (jumpBufferTimer > 0f && isGrounded)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
-            jumpCount--;
             jumpBufferTimer = 0f;
+        }
+    }
+
+    void Running()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            playerSpeed = 4f;
+            animator.speed = 3.5f;
+            isRunning = true;
+
+            if (!isGrounded)
+            {
+                animator.speed = 1f;
+            }
+        }
+        else
+        {
+            playerSpeed = 1.5f;
+            animator.speed = 1f;
+            isRunning = false;
         }
     }
 
