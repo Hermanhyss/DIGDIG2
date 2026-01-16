@@ -47,11 +47,6 @@ public class Enemy : MonoBehaviour
             isChasingPlayer = true;
             agent.SetDestination(player.transform.position);
         }
-        else
-        {
-            isChasingPlayer = false;
-            Patrol();
-        }
 
         bool shouldMove = !animator.GetBool("IsAttacking");
         if (animator.GetBool("IsMoving") != shouldMove)
@@ -60,21 +55,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Patrol()
-    {
-        // Patrol implementation here
-        if (patrolPoints.Length == 0) return;
-
-        // Set the destination to the current patrol point
-        agent.SetDestination(patrolPoints[currentPatrolIndex].position);
-
-        // Check if the enemy has reached the patrol point
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-        {
-            // Switch to the next patrol point
-            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-        }
-    }
 
     public void OnAttackAnimationEvent()
     {

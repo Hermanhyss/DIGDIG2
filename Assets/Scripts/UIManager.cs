@@ -31,6 +31,17 @@ public class UIManager : MonoBehaviour
             {
                 buttonImage.sprite = originalButtonImage;
             }
+
+            if(optionsMenuCanvas.activeSelf)
+            {
+                optionsMenuCanvas.SetActive(false);
+            }
+
+            if (quitMenuCanvas.activeSelf)
+            {
+                quitMenuCanvas.SetActive(false);
+            }
+
         }
 
         if (paused)
@@ -44,12 +55,29 @@ public class UIManager : MonoBehaviour
             Blur.SetActive(false);
             Time.timeScale = 1f;
         }
+
+        
     }
 
     public void EnterContinue()
     {
-        paused = !paused;
+        
+        
+
         Debug.Log("Continued Game");
+    }
+
+    public void EnterMainMenu()
+    {
+        paused = !paused;
+
+        if(pauseMenu.activeSelf == false)
+        {
+            pauseMenu.SetActive(true);
+        }
+        //Time.timeScale = 1f;
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        //Debug.Log("Entered Main Menu");
     }
 
     public void EnterOptions()
@@ -64,6 +92,8 @@ public class UIManager : MonoBehaviour
         optionsMenuCanvas.SetActive(false);
         pauseMenu.SetActive(true);
 
+
+
     }
     //Quit
     public void EnterQuit()
@@ -73,14 +103,18 @@ public class UIManager : MonoBehaviour
         Debug.Log("Entered Quit");
     }
 
+
     public void CloseQuit()
     {
         quitMenuCanvas.SetActive(false);
         pauseMenu.SetActive(true);
+
+
     }
 
     public void QuitGame()
     {
+
         Application.Quit();
     }
 }
