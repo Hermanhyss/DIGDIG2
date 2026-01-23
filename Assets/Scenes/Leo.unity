@@ -1953,6 +1953,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7999569053545356595, guid: 7005c46473382ea4e8a38dab309a57d1, type: 3}
   m_PrefabInstance: {fileID: 1306812753}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &304259761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 304259762}
+  m_Layer: 0
+  m_Name: EnvironmentCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &304259762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304259761}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -525.2309, y: 0.00002, z: 16006.763}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &305160152 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7999569053545356595, guid: 7005c46473382ea4e8a38dab309a57d1, type: 3}
@@ -2752,6 +2783,34 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 488968000}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Deselected
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 488968002}
+          m_TargetAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_MethodName: set_sprite
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 21300000, guid: a6c4e378628f52345a5be52322602993, type: 3}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
     callback:
       m_PersistentCalls:
         m_Calls:
@@ -11161,3 +11220,4 @@ SceneRoots:
   - {fileID: 125381113}
   - {fileID: 501428457}
   - {fileID: 189690224}
+  - {fileID: 304259762}
