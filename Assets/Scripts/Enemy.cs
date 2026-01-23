@@ -2,230 +2,166 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+namespace Enemies
 {
-    [Header("References")]
-    [SerializeField] private Rigidbody enemyRb;
-    [SerializeField] private Transform EnemyTransform;
-    [SerializeField] private Collider collisionCollider; // Attack range
-    [SerializeField] private Animator animator;
-    [SerializeField] private Collider attackCollider;    // Deals damage
-    private NavMeshAgent agent;
-    private GameObject player;
-
-    [Header("Settings")]
-    [SerializeField] public int health = 3;
-    [SerializeField] private Transform[] patrolPoints;
-    [SerializeField, Range(0, 360)] private float viewAngle = 90f;
-    [SerializeField] private float viewDistance = 10f;
-
-    private int currentPatrolIndex = 0;
-    private bool canAttack = true;
-    private bool isChasingPlayer = false;
-    private bool hasSpottedPlayer = false;
-
-    private void Awake()
+    /// <summary>
+    /// Controls enemy behavior: moves randomly within a defined area.
+    /// </summary>
+    [RequireComponent(typeof(NavMeshAgent))]
+    public class Enemy : MonoBehaviour
     {
-        agent = GetComponent<NavMeshAgent>();
-        var playerController = FindFirstObjectByType<PlayerController>();
-        if (playerController != null)
-        {
-            player = playerController.gameObject;
-        }
-        if (attackCollider != null)
-            attackCollider.enabled = false;
-    }
+        public Vector3 areaCenter = Vector3.zero;
+        public Vector3 areaSize = new Vector3(10, 0, 10);
+        public float waitTime = 2f;
+        public float visionDistance = 15f; // How far the enemy can see
+        public float viewAngle = 90f; // Field of view in degrees
+        public LayerMask visionMask; // Set this in the inspector to include obstacles and player
 
-    private void Update()
-    {
-        if (animator.GetBool("IsDead")) return;
+        public float attackRange = 2f;
+        public float attackCooldown = 1.5f;
 
-        // If the player has ever been spotted, always chase
-        if (hasSpottedPlayer || PlayerInSight())
+        private NavMeshAgent agent;
+        private Animator animator;
+        private float timer;
+        private Transform player;
+        private float lastAttackTime = -Mathf.Infinity;
+
+        void Start()
         {
-            hasSpottedPlayer = true;
-            isChasingPlayer = true;
-            agent.SetDestination(player.transform.position);
+            agent = GetComponent<NavMeshAgent>();
+            animator = GetComponent<Animator>();
+            timer = waitTime;
+            MoveToNewPoint();
+
+            // Find player by tag
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
         }
 
-        bool shouldMove = !animator.GetBool("IsAttacking");
-        if (animator.GetBool("IsMoving") != shouldMove)
+        void Update()
         {
-            animator.SetBool("IsMoving", shouldMove);
-        }
-    }
+            bool isAttacking = animator.GetBool("IsAttacking");
 
-
-    public void OnAttackAnimationEvent()
-    {
-        Debug.Log("Enabling attack collider");
-        if (attackCollider != null)
-            attackCollider.enabled = true;
-    }
-
-    public void OnAttackAnimationEnd()
-    {
-        Debug.Log("Disabling attack collider");
-        if (attackCollider != null)
-            attackCollider.enabled = false;
-
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-
-        if (collisionCollider != null && other == player.GetComponent<Collider>())
-        {
-            agent.isStopped = true;
-            animator.SetBool("IsAttacking", true);
-            animator.SetBool("IsMoving", false);
-        }
-
-        if (attackCollider != null && other != null && other.gameObject == player && attackCollider.enabled)
-        {
-            var playerController = other.GetComponent<PlayerController>();
-            if (playerController != null)
+            if (!isAttacking)
             {
-                // playerController.TakeDamage(1); 
-                Debug.Log("Player took damage from enemy attack!");
+                bool isMoving = agent.velocity.magnitude > 0.1f;
+                animator.SetBool("IsMoving", isMoving);
+                animator.SetBool("IsIdle", !isMoving);
+            }
+
+            if (player != null && CanSeePlayer())
+            {
+                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+                if (distanceToPlayer > attackRange)
+                {
+                    // Chase the player
+                    agent.SetDestination(player.position);
+                    animator.SetBool("IsAttacking", false);
+                }
+                else
+                {
+                    // Attack the player
+                    agent.ResetPath();
+                    animator.SetBool("IsAttacking", true);
+
+                    if (Time.time - lastAttackTime > attackCooldown)
+                    {
+                        AttackPlayer();
+                        lastAttackTime = Time.time;
+                    }
+                }
+                return; // Skip random movement if chasing/attacking
+            }
+
+            animator.SetBool("IsAttacking", false);
+
+            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            {
+                timer -= Time.deltaTime;
+                if (timer <= 0f)
+                {
+                    MoveToNewPoint();
+                    timer = waitTime;
+                }
             }
         }
-    }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Player") && canAttack)
+        bool CanSeePlayer()
         {
-            agent.isStopped = true;
-            animator.SetBool("IsAttacking", true);
-            animator.SetBool("IsMoving", false);
-            canAttack = false;
-            StartCoroutine(AttackCooldown());
+            Vector3 origin = transform.position + Vector3.up * 1.0f; // Raise the raycast origin
+            Vector3 directionToPlayer = (player.position - origin).normalized;
+            float distanceToPlayer = Vector3.Distance(origin, player.position);
 
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (collisionCollider != null && other == player.GetComponent<Collider>())
-        {
-            StartCoroutine(BeforeMoving());
-        }
-    }
-
-    private IEnumerator AttackCooldown()
-    {
-        yield return new WaitForSeconds(1f);
-        animator.SetBool("IsAttacking", false);
-        canAttack = true;
-    }
-
-    private IEnumerator BeforeMoving()
-    {
-        yield return new WaitForSeconds(3f);
-        agent.isStopped = false;
-        animator.SetBool("IsMoving", true);
-        animator.SetBool("IsAttacking", false);
-    }
-
-    public void TakeDamage(int amount)
-    {
-        health -= amount;
-        if (health <= 0)
-        {
-            EnemyDie();      
-        }
-    }
-
-    public void EnemyDie()
-    {
-        animator.SetBool("IsDead", true);
-
-        agent.isStopped = true;
-        agent.ResetPath();
-        agent.velocity = Vector3.zero;
-
-        enemyRb.linearVelocity = Vector3.zero;
-        enemyRb.angularVelocity = Vector3.zero;
-        enemyRb.isKinematic = true;
-
-        collisionCollider.enabled = false;
-        attackCollider.enabled = false;
-    }
-  
-
-    private bool PlayerInSight()
-    {
-        if (player == null) return false;
-
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer > viewDistance) return false;
-
-        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-        if (angleToPlayer > viewAngle * 0.5f) return false;
-
-        // Raycast to check for clear line of sight between enemy and player
-        Ray ray = new Ray(transform.position + Vector3.up * 0.5f, directionToPlayer);
-        if (Physics.Raycast(ray, out RaycastHit hit, viewDistance))
-        {
-            // If the first thing hit isn't the player, line of sight is blocked
-            if (hit.collider.gameObject != player)
+            if (distanceToPlayer > visionDistance)
                 return false;
-        }
-        else
-        {
-            // Nothing was hit, so no line of sight
+
+            float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+            if (angleToPlayer > viewAngle / 2f)
+                return false;
+
+            RaycastHit hit;
+            Debug.DrawRay(origin, directionToPlayer * visionDistance, Color.red); // Visualize the ray
+
+            if (Physics.Raycast(origin, directionToPlayer, out hit, visionDistance, visionMask))
+            {
+                if (hit.transform.CompareTag("Player"))
+                    return true;
+            }
             return false;
         }
 
-        return true;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // Draw view distance
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
-
-        // Draw view angle
-        Vector3 forward = transform.forward;
-        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle * 0.5f, 0) * forward;
-        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle * 0.5f, 0) * forward;
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + leftBoundary * viewDistance);
-        Gizmos.DrawLine(transform.position, transform.position + rightBoundary * viewDistance);
-
-        // Draw the raycast for line of sight (even in edit mode if player is assigned)
-        if (player != null)
+        void MoveToNewPoint()
         {
-            Vector3 origin = transform.position + Vector3.up * 0.5f;
-            Vector3 direction = (player.transform.position - transform.position).normalized;
-            float distance = Mathf.Min(viewDistance, Vector3.Distance(transform.position, player.transform.position));
+            Vector3 randomPoint = areaCenter + new Vector3(
+                Random.Range(-areaSize.x / 2, areaSize.x / 2),
+                0,
+                Random.Range(-areaSize.z / 2, areaSize.z / 2)
+            );
 
-            // Perform the same raycast as in PlayerInSight
-            Ray ray = new Ray(origin, direction);
-            if (Physics.Raycast(ray, out RaycastHit hit, viewDistance))
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPoint, out hit, 2.0f, NavMesh.AllAreas))
             {
-                Gizmos.color = hit.collider.gameObject == player ? Color.green : Color.magenta;
-                Gizmos.DrawLine(origin, hit.point);
-                Gizmos.DrawWireSphere(hit.point, 0.2f);
-            }
-            else
-            {
-                Gizmos.color = Color.gray;
-                Gizmos.DrawLine(origin, origin + direction * viewDistance);
+                agent.SetDestination(hit.position);
             }
         }
 
-        // Optionally, draw a line to the player if in sight during play mode
-        if (Application.isPlaying && player != null && PlayerInSight())
+        void AttackPlayer()
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, player.transform.position);
+            Debug.Log("Enemy attacks the player!");
+            // TODO: Add damage logic here
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(areaCenter, areaSize);
+
+            // Draw vision range
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, visionDistance);
+
+            // Draw vision angle
+            Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
+            Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, transform.position + leftBoundary * visionDistance);
+            Gizmos.DrawLine(transform.position, transform.position + rightBoundary * visionDistance);
+
+            // Draw line to player
+            if (player != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, player.position);
+
+                // Draw a blue line if the enemy can see the player
+                if (Application.isPlaying && CanSeePlayer())
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawLine(transform.position, player.position);
+                }
+            }
         }
     }
 }
