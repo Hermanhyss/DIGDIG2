@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AlvaMap.unity
     guid: 400b838395159a645b2a77076424c019
+  - enabled: 1
+    path: Assets/Scenes/Oscar.unity
+    guid: 93f2751bad0ee25468fdaf0258594e97
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
