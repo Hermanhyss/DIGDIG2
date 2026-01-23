@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isGrounded;
     [SerializeField] LayerMask Ground;
     Rigidbody rb;
+    public float maxDistance = 2;
 
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
@@ -50,16 +51,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, Ground);
 
-        if (isGrounded && rb.linearVelocity.y <= 0f)
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position + new Vector3(0,-1,0), transform.TransformDirection(Vector3.down), out hit, maxDistance, Ground))
         {
-            animator.SetBool("Land", true);
+            Debug.DrawRay(transform.position + new Vector3(0,-1,0), transform.TransformDirection(Vector3.down) * hit.distance, Color.red);
+            animator.SetBool("Landing", true);
         }
         else
         {
-            animator.SetBool("Land", false);
+            animator.SetBool("Landing", false);
             animator.SetBool("Jump", false);
         }
 
@@ -73,15 +75,15 @@ public class PlayerController : MonoBehaviour
             jumpBufferTimer -= Time.deltaTime;
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light"))
-        {
-            animator.SetBool("Attack light", false);
-        }
-        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light 2"))
-        {
-            animator.SetBool("Attack light 2", false);
-            noOfClicks = 0;
-        }
+        //if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light"))
+        //{
+        //    animator.SetBool("Attack light", false);
+        //}
+        //if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light 2"))
+        //{
+        //    animator.SetBool("Attack light 2", false);
+        //    noOfClicks = 0;
+        //}
 
 
         if (Time.time - lastClickedTime > maxComboDelay)
@@ -90,14 +92,14 @@ public class PlayerController : MonoBehaviour
         }
 
         //cooldown time
-        if (Time.time > nextFireTime)
-        {
-            // Check for mouse input
-            if (Input.GetMouseButtonDown(0))
-            {
-                OnClick();
-            }
-        }
+        //if (Time.time > nextFireTime)
+        //{
+        //    // Check for mouse input
+        //    if (Input.GetMouseButtonDown(0))
+        //    {
+        //        OnClick();
+        //    }
+        //}
 
         if (animator.GetBool("IsAttacking"))
         {
@@ -151,27 +153,27 @@ public class PlayerController : MonoBehaviour
         WalkingEffect();
     }
 
-    void OnClick()
-    {
-        lastClickedTime = Time.time;
-        noOfClicks++;
+    //void OnClick()
+    //{
+    //    lastClickedTime = Time.time;
+    //    noOfClicks++;
 
-        if (noOfClicks == 1)
-        {
-            animator.SetBool("IsAttacking", true);
-            animator.SetBool("Attack light", true);
-        }
+    //    if (noOfClicks == 1)
+    //    {
+    //        animator.SetBool("IsAttacking", true);
+    //        animator.SetBool("Attack light", true);
+    //    }
 
-        noOfClicks = Mathf.Clamp(noOfClicks, 0, 2);
+    //    noOfClicks = Mathf.Clamp(noOfClicks, 0, 2);
 
-        var st = animator.GetCurrentAnimatorStateInfo(0);
+    //    var st = animator.GetCurrentAnimatorStateInfo(0);
 
-        if (noOfClicks >= 2 && st.normalizedTime > 0.7f && st.IsName("Attack light"))
-        {
-            animator.SetBool("Attack light", false);
-            animator.SetBool("Attack light 2", true);
-        }
-    }
+    //    if (noOfClicks >= 2 && st.normalizedTime > 0.7f && st.IsName("Attack light"))
+    //    {
+    //        animator.SetBool("Attack light", false);
+    //        animator.SetBool("Attack light 2", true);
+    //    }
+    //}
 
     void Jump()
     {
