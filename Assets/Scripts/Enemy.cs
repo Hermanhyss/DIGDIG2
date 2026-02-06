@@ -4,32 +4,44 @@ using UnityEngine.AI;
 
 namespace Enemies
 {
-    
     [RequireComponent(typeof(NavMeshAgent))]
     public class Enemy : MonoBehaviour
     {
+        #region Patrol Settings
         public Vector3 areaCenter = Vector3.zero;
         public Vector3 areaSize = new Vector3(10, 0, 10);
         public float waitTime = 2f;
-        public float visionDistance = 15f; 
-        public float viewAngle = 90f; 
-        public LayerMask visionMask; 
+        #endregion
 
+        #region Vision Settings
+        public float visionDistance = 15f;
+        public float viewAngle = 90f;
+        public LayerMask visionMask;
+        #endregion
+
+        #region Attack Settings
         [Header("Attack Settings")]
         public float attackRange = 2f;
         public float attackCooldown = 1.5f;
-        public float alertDuration = 1.0f; 
+        public float alertDuration = 1.0f;
         public Collider attackCollider;
+        #endregion
 
+        #region Private Fields
         private NavMeshAgent agent;
         private Animator animator;
         private float timer;
         private Transform player;
-        private float lastAttackTime = -Mathf.Infinity;
-        private bool hasSeenPlayer = false; 
+        private bool hasSeenPlayer = false;
         private bool isAlerting = false;
         private float alertTimer = 0f;
+        #endregion
 
+        #region Unity Events
+
+        /// <summary>
+        /// Initializes the enemy and sets up references.
+        /// </summary>
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
@@ -37,12 +49,14 @@ namespace Enemies
             timer = waitTime;
             MoveToNewPoint();
 
-            
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
                 player = playerObj.transform;
         }
 
+        /// <summary>
+        /// Handles enemy state updates each frame.
+        /// </summary>
         void Update()
         {
             bool isAttacking = animator.GetBool("IsAttacking");
@@ -58,48 +72,20 @@ namespace Enemies
             {
                 if (CanSeePlayer() && !hasSeenPlayer && !isAlerting)
                 {
-                    // First time seeing player: enter alert state
-                    isAlerting = true;
-                    alertTimer = alertDuration;
-                    animator.SetBool("IsAlert", true);
-                    agent.ResetPath();
-                    animator.SetBool("IsMoving", false);
-                    animator.SetBool("IsIdle", false);
-                    animator.SetBool("IsAttacking", false);
+                    EnterAlertState();
                     return;
                 }
 
                 if (isAlerting)
                 {
-                    alertTimer -= Time.deltaTime;
-                    if (alertTimer <= 0f)
-                    {
-                        isAlerting = false;
-                        hasSeenPlayer = true;
-                        animator.SetBool("IsAlert", false);
-                    }
-                    return; // Wait until alert is done
+                    UpdateAlertState();
+                    return;
                 }
 
                 if (hasSeenPlayer)
                 {
-                    float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-                    if (distanceToPlayer > attackRange)
-                    {
-                        // Chase the player
-                        agent.SetDestination(player.position);
-                        animator.SetBool("IsAttacking", false);
-                        animator.SetBool("IsMoving", true);
-                    }
-                    else
-                    {
-                        // Attack the player
-                        agent.ResetPath();
-                        animator.SetBool("IsMoving", false);
-                        animator.SetBool("IsAttacking", true);
-                    }
-                    return; // Skip random movement if chasing/attacking
+                    HandleChaseOrAttack();
+                    return;
                 }
             }
 
@@ -116,9 +102,57 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Visualizes patrol area and vision in the editor.
+        /// </summary>
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(areaCenter, areaSize);
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, visionDistance);
+
+            Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
+            Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, transform.position + leftBoundary * visionDistance);
+            Gizmos.DrawLine(transform.position, transform.position + rightBoundary * visionDistance);
+
+            if (player != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, player.position);
+
+                if (Application.isPlaying && CanSeePlayer())
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawLine(transform.position, player.position);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles attack collider trigger events.
+        /// </summary>
+        void OnTriggerEnter(Collider other)
+        {
+            if (attackCollider != null && attackCollider.enabled && other.CompareTag("Player"))
+            {
+                Debug.Log("Enemy deals damage to the player!");
+            }
+        }
+
+        #endregion
+
+        #region State Methods
+
+        /// <summary>
+        /// Checks if the enemy can see the player.
+        /// </summary>
         bool CanSeePlayer()
         {
-            Vector3 origin = transform.position + Vector3.up * 1.0f; // Raise the raycast origin
+            Vector3 origin = transform.position + Vector3.up * 1.0f;
             Vector3 directionToPlayer = (player.position - origin).normalized;
             float distanceToPlayer = Vector3.Distance(origin, player.position);
 
@@ -130,7 +164,7 @@ namespace Enemies
                 return false;
 
             RaycastHit hit;
-            Debug.DrawRay(origin, directionToPlayer * visionDistance, Color.red); // Visualize the ray
+            Debug.DrawRay(origin, directionToPlayer * visionDistance, Color.red);
 
             if (Physics.Raycast(origin, directionToPlayer, out hit, visionDistance, visionMask))
             {
@@ -140,6 +174,9 @@ namespace Enemies
             return false;
         }
 
+        /// <summary>
+        /// Moves the enemy to a new random point within the patrol area.
+        /// </summary>
         void MoveToNewPoint()
         {
             Vector3 randomPoint = areaCenter + new Vector3(
@@ -155,9 +192,62 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Handles entering the alert state when the player is first seen.
+        /// </summary>
+        void EnterAlertState()
+        {
+            isAlerting = true;
+            alertTimer = alertDuration;
+            animator.SetBool("IsAlert", true);
+            agent.ResetPath();
+            animator.SetBool("IsMoving", false);
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsAttacking", false);
+        }
 
+        /// <summary>
+        /// Updates the alert state timer and transitions out of alert.
+        /// </summary>
+        void UpdateAlertState()
+        {
+            alertTimer -= Time.deltaTime;
+            if (alertTimer <= 0f)
+            {
+                isAlerting = false;
+                hasSeenPlayer = true;
+                animator.SetBool("IsAlert", false);
+            }
+        }
 
-        // Call this from animation event at the start of the attack animation
+        /// <summary>
+        /// Handles chasing or attacking the player.
+        /// </summary>
+        void HandleChaseOrAttack()
+        {
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+            if (distanceToPlayer > attackRange)
+            {
+                agent.SetDestination(player.position);
+                animator.SetBool("IsAttacking", false);
+                animator.SetBool("IsMoving", true);
+            }
+            else
+            {
+                agent.ResetPath();
+                animator.SetBool("IsMoving", false);
+                animator.SetBool("IsAttacking", true);
+            }
+        }
+
+        #endregion
+
+        #region Animation Event Methods
+
+        /// <summary>
+        /// Called at the start of the attack animation.
+        /// </summary>
         public void AttackingAnimationStart()
         {
             if (attackCollider != null)
@@ -171,7 +261,9 @@ namespace Enemies
             }
         }
 
-        // Call this from animation event at the end of the attack animation
+        /// <summary>
+        /// Called at the end of the attack animation.
+        /// </summary>
         public void AttackingAnimationEnd()
         {
             if (attackCollider != null)
@@ -185,46 +277,6 @@ namespace Enemies
             }
         }
 
-        void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(areaCenter, areaSize);
-
-            // Draw vision range
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(transform.position, visionDistance);
-
-            // Draw vision angle
-            Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
-            Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, transform.position + leftBoundary * visionDistance);
-            Gizmos.DrawLine(transform.position, transform.position + rightBoundary * visionDistance);
-
-            // Draw line to player
-            if (player != null)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, player.position);
-
-                // Draw a blue line if the enemy can see the player
-                if (Application.isPlaying && CanSeePlayer())
-                {
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(transform.position, player.position);
-                }
-            }
-        }
-
-        void OnTriggerEnter(Collider other)
-        {
-            if (attackCollider != null && attackCollider.enabled && other.CompareTag("Player"))
-            {
-           
-                Debug.Log("Enemy deals damage to the player!");
-
-              
-            }
-        }
+        #endregion
     }
 }
