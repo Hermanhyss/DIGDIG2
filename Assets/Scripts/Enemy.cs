@@ -4,27 +4,31 @@ using UnityEngine.AI;
 
 namespace Enemies
 {
-    /// <summary>
-    /// Controls enemy behavior: moves randomly within a defined area.
-    /// </summary>
+    
     [RequireComponent(typeof(NavMeshAgent))]
     public class Enemy : MonoBehaviour
     {
         public Vector3 areaCenter = Vector3.zero;
         public Vector3 areaSize = new Vector3(10, 0, 10);
         public float waitTime = 2f;
-        public float visionDistance = 15f; // How far the enemy can see
-        public float viewAngle = 90f; // Field of view in degrees
-        public LayerMask visionMask; // Set this in the inspector to include obstacles and player
+        public float visionDistance = 15f; 
+        public float viewAngle = 90f; 
+        public LayerMask visionMask; 
 
+        [Header("Attack Settings")]
         public float attackRange = 2f;
         public float attackCooldown = 1.5f;
+        public float alertDuration = 1.0f; 
+        public Collider attackCollider;
 
         private NavMeshAgent agent;
         private Animator animator;
         private float timer;
         private Transform player;
         private float lastAttackTime = -Mathf.Infinity;
+        private bool hasSeenPlayer = false; 
+        private bool isAlerting = false;
+        private float alertTimer = 0f;
 
         void Start()
         {
@@ -33,7 +37,7 @@ namespace Enemies
             timer = waitTime;
             MoveToNewPoint();
 
-            // Find player by tag
+            
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
                 player = playerObj.transform;
@@ -43,36 +47,60 @@ namespace Enemies
         {
             bool isAttacking = animator.GetBool("IsAttacking");
 
-            if (!isAttacking)
+            if (!isAttacking && !isAlerting)
             {
                 bool isMoving = agent.velocity.magnitude > 0.1f;
                 animator.SetBool("IsMoving", isMoving);
                 animator.SetBool("IsIdle", !isMoving);
             }
 
-            if (player != null && CanSeePlayer())
+            if (player != null)
             {
-                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-                if (distanceToPlayer > attackRange)
+                if (CanSeePlayer() && !hasSeenPlayer && !isAlerting)
                 {
-                    // Chase the player
-                    agent.SetDestination(player.position);
-                    animator.SetBool("IsAttacking", false);
-                }
-                else
-                {
-                    // Attack the player
+                    // First time seeing player: enter alert state
+                    isAlerting = true;
+                    alertTimer = alertDuration;
+                    animator.SetBool("IsAlert", true);
                     agent.ResetPath();
-                    animator.SetBool("IsAttacking", true);
-
-                    if (Time.time - lastAttackTime > attackCooldown)
-                    {
-                        AttackPlayer();
-                        lastAttackTime = Time.time;
-                    }
+                    animator.SetBool("IsMoving", false);
+                    animator.SetBool("IsIdle", false);
+                    animator.SetBool("IsAttacking", false);
+                    return;
                 }
-                return; // Skip random movement if chasing/attacking
+
+                if (isAlerting)
+                {
+                    alertTimer -= Time.deltaTime;
+                    if (alertTimer <= 0f)
+                    {
+                        isAlerting = false;
+                        hasSeenPlayer = true;
+                        animator.SetBool("IsAlert", false);
+                    }
+                    return; // Wait until alert is done
+                }
+
+                if (hasSeenPlayer)
+                {
+                    float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+                    if (distanceToPlayer > attackRange)
+                    {
+                        // Chase the player
+                        agent.SetDestination(player.position);
+                        animator.SetBool("IsAttacking", false);
+                        animator.SetBool("IsMoving", true);
+                    }
+                    else
+                    {
+                        // Attack the player
+                        agent.ResetPath();
+                        animator.SetBool("IsMoving", false);
+                        animator.SetBool("IsAttacking", true);
+                    }
+                    return; // Skip random movement if chasing/attacking
+                }
             }
 
             animator.SetBool("IsAttacking", false);
@@ -127,10 +155,34 @@ namespace Enemies
             }
         }
 
-        void AttackPlayer()
+
+
+        // Call this from animation event at the start of the attack animation
+        public void AttackingAnimationStart()
         {
-            Debug.Log("Enemy attacks the player!");
-            // TODO: Add damage logic here
+            if (attackCollider != null)
+            {
+                attackCollider.enabled = true;
+                Debug.Log("Attack collider enabled");
+            }
+            else
+            {
+                Debug.LogWarning("Attack collider is not assigned!");
+            }
+        }
+
+        // Call this from animation event at the end of the attack animation
+        public void AttackingAnimationEnd()
+        {
+            if (attackCollider != null)
+            {
+                attackCollider.enabled = false;
+                Debug.Log("Attack collider disabled");
+            }
+            else
+            {
+                Debug.LogWarning("Attack collider is not assigned!");
+            }
         }
 
         void OnDrawGizmosSelected()
@@ -161,6 +213,17 @@ namespace Enemies
                     Gizmos.color = Color.blue;
                     Gizmos.DrawLine(transform.position, player.position);
                 }
+            }
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (attackCollider != null && attackCollider.enabled && other.CompareTag("Player"))
+            {
+           
+                Debug.Log("Enemy deals damage to the player!");
+
+              
             }
         }
     }
