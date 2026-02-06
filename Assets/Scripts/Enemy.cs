@@ -113,6 +113,10 @@ namespace Enemies
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(transform.position, visionDistance);
 
+            // Draw attack range
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+
             Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
             Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
             Gizmos.color = Color.blue;
