@@ -48914,6 +48914,7 @@ MonoBehaviour:
   attackRange: 2
   attackCooldown: 1.5
   alertDuration: 1
+  attackCollider: {fileID: 6523016721514334586}
 --- !u!195 &6523016721514334589
 NavMeshAgent:
   m_ObjectHideFlags: 0
