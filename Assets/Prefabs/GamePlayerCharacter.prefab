@@ -181,7 +181,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DealDamage
   damage: 1
-  weaponCollider: {fileID: 0}
 --- !u!1 &1306786933611532563
 GameObject:
   m_ObjectHideFlags: 0
@@ -6014,7 +6013,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerSpeed: 1.5
-  jumpStrength: 5
+  jumpStrength: 9
   gravityScale: 4
   coyoteTime: 0.2
   peak: 3
@@ -6025,8 +6024,10 @@ MonoBehaviour:
   Ground:
     serializedVersion: 2
     m_Bits: 64
+  maxDistance: 2
   groundCheck: {fileID: 6257001914371578385}
   groundRadius: 0.2
+  comboTimeFrame: 0
 --- !u!114 &6623442645245618823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6040,7 +6041,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DealDamage
   damage: 1
-  weaponCollider: {fileID: 0}
 --- !u!1 &7688969959779769952
 GameObject:
   m_ObjectHideFlags: 0

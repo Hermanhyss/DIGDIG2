@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -25,18 +26,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundRadius = 0.2f;
 
-
     bool canMove = true;
     Animator animator;
     ChromaticPulse chromaticPulse;
     ChromaticVignettePulse chromaticVignettePulse;
 
-    public float cooldownTime = 2f;
-    private float nextFireTime = 0f;
-    public static int noOfClicks = 0;
-    float lastClickedTime = 0;
-    float maxComboDelay = 1;
+    [SerializeField] float comboTimeFrame;
+    int numberOfAttack;
+    bool ActivateComboTimer;
 
+
+    bool canAttack;
 
     private void Start()
     {
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
         if (walkingEffect != null)
             walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
-
+        canAttack = true;
     }
 
     private void Update()
@@ -75,32 +75,6 @@ public class PlayerController : MonoBehaviour
             jumpBufferTimer -= Time.deltaTime;
         }
 
-        //if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light"))
-        //{
-        //    animator.SetBool("Attack light", false);
-        //}
-        //if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack light 2"))
-        //{
-        //    animator.SetBool("Attack light 2", false);
-        //    noOfClicks = 0;
-        //}
-
-
-        if (Time.time - lastClickedTime > maxComboDelay)
-        {
-            noOfClicks = 0;
-        }
-
-        //cooldown time
-        //if (Time.time > nextFireTime)
-        //{
-        //    // Check for mouse input
-        //    if (Input.GetMouseButtonDown(0))
-        //    {
-        //        OnClick();
-        //    }
-        //}
-
         if (animator.GetBool("IsAttacking"))
         {
             canMove = false;
@@ -113,6 +87,7 @@ public class PlayerController : MonoBehaviour
 
         Jump();
         Running();
+        AttackCombo();
     }
 
     private void FixedUpdate()
@@ -138,7 +113,6 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-
                 rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
                 animator.SetBool("Walking", false);
             }
@@ -152,28 +126,6 @@ public class PlayerController : MonoBehaviour
 
         WalkingEffect();
     }
-
-    //void OnClick()
-    //{
-    //    lastClickedTime = Time.time;
-    //    noOfClicks++;
-
-    //    if (noOfClicks == 1)
-    //    {
-    //        animator.SetBool("IsAttacking", true);
-    //        animator.SetBool("Attack light", true);
-    //    }
-
-    //    noOfClicks = Mathf.Clamp(noOfClicks, 0, 2);
-
-    //    var st = animator.GetCurrentAnimatorStateInfo(0);
-
-    //    if (noOfClicks >= 2 && st.normalizedTime > 0.7f && st.IsName("Attack light"))
-    //    {
-    //        animator.SetBool("Attack light", false);
-    //        animator.SetBool("Attack light 2", true);
-    //    }
-    //}
 
     void Jump()
     {
@@ -204,6 +156,40 @@ public class PlayerController : MonoBehaviour
             animator.speed = 1f;
             isRunning = false;
         }
+    }
+
+    void AttackCombo()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            StopCoroutine(AttackComboCor());
+            StartCoroutine(AttackComboCor());
+        }
+    }
+
+    IEnumerator AttackComboCor()
+    {
+        ActivateComboTimer = true;
+       
+        numberOfAttack += 1;
+        
+
+        if (numberOfAttack == 1 && canAttack)
+        {
+            animator.Play("Attack light");
+        }
+        
+        if(numberOfAttack == 2 && canAttack){
+            animator.Play("Attack light 2");
+        }
+
+        canAttack = false;
+        yield return new WaitForSeconds(0.2f);
+        canAttack = true;
+        yield return new WaitForSeconds(0.5f);
+
+        numberOfAttack = 0;
+        ActivateComboTimer = false;
     }
 
     void WalkingEffect()
