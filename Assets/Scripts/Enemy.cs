@@ -35,6 +35,24 @@ namespace Enemies
         private bool hasSeenPlayer = false;
         private bool isAlerting = false;
         private float alertTimer = 0f;
+
+        #region Health Settings
+        [Header("Health Settings")]
+        public float maxHealth = 100f;
+        private float currentHealth;
+        private bool isDead = false;
+        #endregion
+
+        #endregion
+
+        #region Audio/Animation Fields
+
+        public AudioSource walkingAudioSource;
+        public AudioClip walkingClip;
+
+        public AudioSource alertAudioSource;
+        public AudioClip alertClip;
+
         #endregion
 
         #region Unity Events
@@ -52,6 +70,8 @@ namespace Enemies
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
                 player = playerObj.transform;
+
+            currentHealth = maxHealth;
         }
 
         /// <summary>
@@ -281,6 +301,76 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Called by the WalkingSound animation event to play the walking sound.
+        /// </summary>
+        public void WalkingSound()
+        {
+            if (walkingAudioSource != null && walkingClip != null)
+            {
+                walkingAudioSource.PlayOneShot(walkingClip);
+            }
+            else
+            {
+                Debug.LogWarning("Walking audio source or clip not assigned!");
+            }
+        }
+
+        /// <summary>
+        /// Called by the SoundAlert animation event to play the alert sound.
+        /// </summary>
+        public void SoundAlert()
+        {
+            if (alertAudioSource != null && alertClip != null)
+            {
+                alertAudioSource.PlayOneShot(alertClip);
+            }
+            else
+            {
+                Debug.LogWarning("Alert audio source or clip not assigned!");
+            }
+        }
+
         #endregion
+
+        /// <summary>
+        /// Call this method to deal damage to the enemy.
+        /// </summary>
+        public void TakeDamage(float amount)
+        {
+            if (isDead)
+                return;
+
+            currentHealth -= amount;
+            if (currentHealth <= 0f)
+            {
+                Die();
+            }
+        }
+
+        /// <summary>
+        /// Handles enemy death.
+        /// </summary>
+        private void Die()
+        {
+            isDead = true;
+            animator.SetBool("IsDead", true);
+
+            // Stop movement
+            agent.isStopped = true;
+            agent.enabled = false;
+
+            // Disable attack collider
+            if (attackCollider != null)
+                attackCollider.enabled = false;
+
+            // Disable all other colliders on this GameObject
+            foreach (var col in GetComponents<Collider>())
+                col.enabled = false;
+
+            // Disable this script to stop Update and other logic
+            enabled = false;
+        }
     }
-}
+ }
+
