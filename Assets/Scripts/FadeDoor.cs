@@ -21,7 +21,6 @@ public class FadeDoor : MonoBehaviour
     private bool _isFading;
 
     private Animator animator;
-    private bool DoorOpen = false;
     private void Start()
     {
         animator = GetComponent<Animator>();
