@@ -55,6 +55,13 @@ namespace Enemies
 
         #endregion
 
+        #region Flash On Damage Fields
+        private Renderer enemyRenderer;
+        private Color[] originalColors;
+        public Color flashColor = Color.red;
+        public float flashDuration = 0.15f;
+        #endregion
+
         #region Unity Events
 
         /// <summary>
@@ -72,6 +79,18 @@ namespace Enemies
                 player = playerObj.transform;
 
             currentHealth = maxHealth;
+
+            // Cache the original colors of the enemy's materials
+            enemyRenderer = GetComponent<Renderer>();
+            if (enemyRenderer != null)
+            {
+                int materialCount = enemyRenderer.materials.Length;
+                originalColors = new Color[materialCount];
+                for (int i = 0; i < materialCount; i++)
+                {
+                    originalColors[i] = enemyRenderer.materials[i].color;
+                }
+            }
         }
 
         /// <summary>
@@ -346,6 +365,10 @@ namespace Enemies
             {
                 Die();
             }
+            else
+            {
+                FlashOnDamage();
+            }
         }
 
         /// <summary>
@@ -370,6 +393,47 @@ namespace Enemies
 
             // Disable this script to stop Update and other logic
             enabled = false;
+        }
+
+        /// <summary>
+        /// Flashes the enemy's material colors to indicate damage.
+        /// </summary>
+        private void FlashOnDamage()
+        {
+            if (enemyRenderer == null || originalColors == null)
+                return;
+
+            StopAllCoroutines();
+            StartCoroutine(FlashCoroutine());
+        }
+
+        /// <summary>
+        /// Coroutine to handle the flashing effect.
+        /// </summary>
+        private IEnumerator FlashCoroutine()
+        {
+            float elapsed = 0f;
+
+            while (elapsed < flashDuration)
+            {
+                float t = elapsed / flashDuration;
+
+                // Lerp the color between the original color and the flash color
+                for (int i = 0; i < enemyRenderer.materials.Length; i++)
+                {
+                    Color newColor = Color.Lerp(originalColors[i], flashColor, t);
+                    enemyRenderer.materials[i].color = newColor;
+                }
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            // Restore original colors
+            for (int i = 0; i < enemyRenderer.materials.Length; i++)
+            {
+                enemyRenderer.materials[i].color = originalColors[i];
+            }
         }
     }
  }
