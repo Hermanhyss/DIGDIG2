@@ -127,15 +127,29 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.5693216
+      - time: 0
         functionName: AttackingAnimationStart
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.56652826
+        functionName: OpenAttackingColider
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.91821
-        functionName: AttackingAnimationEnd
+        functionName: CloseAttackingColider
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: AttackingAnimationEnding
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -48612,12 +48612,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 0e99002bb781eea4f8d3275cfc845f24, type: 3}
     - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
+      propertyPath: viewAngle
+      value: 130
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
+      propertyPath: attackRange
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
       propertyPath: walkingClip
       value: 
       objectReference: {fileID: 8300000, guid: 46cce2440bb38f04bbff8f4c5132ab54, type: 3}
     - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
       propertyPath: alertDuration
-      value: 3
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
+      propertyPath: attackCooldown
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
+      propertyPath: visionDistance
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
       propertyPath: alertAudioSource
@@ -48667,7 +48683,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8973399645455331308, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
