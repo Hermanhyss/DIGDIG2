@@ -48617,7 +48617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
       propertyPath: attackRange
-      value: 0.95
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6139278262278012058, guid: 0d4c9c61fc959f149ae872175cdb4ce2, type: 3}
       propertyPath: walkingClip
