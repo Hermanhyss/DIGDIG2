@@ -23,6 +23,7 @@ namespace Enemies
         [Header("Attack Settings")]
         public float attackRange = 2f;
         public float alertDuration = 1.0f;
+        public float attackCooldown = 1.5f;
         public Collider attackCollider;
         #endregion
 
@@ -43,7 +44,7 @@ namespace Enemies
         #endregion
 
         private bool isAttackAnimationPlaying = false;
-
+        private bool isIdleCooldown = false;
         #endregion
 
         #region Audio/Animation Fields
@@ -279,16 +280,18 @@ namespace Enemies
         {
             if (CanAttackPlayer())
             {
-                if (!isAttackAnimationPlaying)
+                // Only trigger attack if animation is not playing and cooldown is finished
+                if (!isAttackAnimationPlaying && !isIdleCooldown)
                 {
                     agent.ResetPath();
+                    animator.SetBool("IsIdle", false);
                     animator.SetBool("IsMoving", false);
                     animator.SetBool("IsAttacking", true);
                 }
             }
             else
             {
-                if (!isAttackAnimationPlaying)
+                if (!isAttackAnimationPlaying && !isIdleCooldown)
                 {
                     agent.SetDestination(player.position);
                     animator.SetBool("IsAttacking", false);
@@ -377,6 +380,22 @@ namespace Enemies
         public void AttackingAnimationEnding()
         {
             isAttackAnimationPlaying = false;
+            StartCoroutine(AttackIdleCooldown());
+        }
+
+        private IEnumerator AttackIdleCooldown()
+        {
+            isIdleCooldown = true;
+            agent.isStopped = true;
+            animator.SetBool("IsIdle", true);
+            animator.SetBool("IsMoving", false);
+            animator.SetBool("IsAttacking", false);
+
+            yield return new WaitForSeconds(attackCooldown);
+
+            agent.isStopped = false;
+            animator.SetBool("IsIdle", false);
+            isIdleCooldown = false;
         }
 
         #endregion
@@ -484,7 +503,6 @@ namespace Enemies
             if (angleToPlayer > viewAngle / 2f)
                 return false;
 
-            // Optionally, add a raycast here if you want to check for obstacles between enemy and player
             return true;
         }
     }
