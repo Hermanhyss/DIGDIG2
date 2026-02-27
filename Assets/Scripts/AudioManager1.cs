@@ -1,11 +1,58 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+
+public enum SoundId
+{
+    BackgroundMusic,
+    GameOver,
+
+    Attack1,
+    Attack2,
+    Attack3,
+
+    EnemyTakeDamage,
+    PlayerTakeDamage,
+
+    Buttons,
+    EnemyAttack,
+
+    SpaceStationBeep,
+    ElectricityCable
+}
+
+public enum SoundBus
+{
+    Music,
+    SFX,
+    UI,
+}
+
+[Serializable]
+public class SoundDef
+{
+    public SoundId id;
+    public SoundBus bus = SoundBus.SFX;
+    public AudioClip clip;
+
+    [Range(0f, 1f)] public float volume = 1f;
+    [Range(0.5f, 2f)] public float pitch = 1f;
+
+    public bool loop = false;
+
+    [Tooltip("If true, pitch is randomized around Pitch value.")]
+    public bool randomizePitch = false;
+
+    [Tooltip("Random pitch range around Pitch (e.g. 0.1 means +-0.1).")]
+    [Range(0f, 0.5f)] public float pitchJitter = 0.1f;
+}
 
 public class AudioManager1 : MonoBehaviour
 {
     public static AudioManager1 I { get; private set; }
 
-    [Header("Mixer")]
+    [Header("Mixer (optional for volume sliders)")]
     [SerializeField] private AudioMixer mixer;
 
     [Header("Audio Sources")]
@@ -13,103 +60,145 @@ public class AudioManager1 : MonoBehaviour
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource uiSource;
 
+    [Header("Sounds Library")]
+    [SerializeField] private List<SoundDef> sounds = new();
+
+    private Dictionary<SoundId, SoundDef> _map;
+
+    private void Awake()
+    {
+        if (I != null && I != this) { Destroy(gameObject); return; }
+        I = this;
+        DontDestroyOnLoad(gameObject);
+
+        _map = new Dictionary<SoundId, SoundDef>();
+        foreach (var s in sounds)
+        {
+            if (s == null) continue;
+            _map[s.id] = s;
+        }
+    }
+
+    public float GetSavedVolume(string exposedParam, float defaultValue = 1f)
+    {
+        return PlayerPrefs.GetFloat("vol_" + exposedParam, defaultValue);
+    }
+
+    public AudioSource src;
+
+    void Update()
+    {
+        if (src == null) return;
+
+        Debug.Log($"isPlaying={src.isPlaying}, time={src.time:0.00}, clip={(src.clip ? src.clip.name : "NULL")}");
+    }
+
+
+public void Play(SoundId id)
+    {
+        if (_map == null)
+        {
+            Debug.LogError("Sound map is null (did Awake run?)");
+            return;
+        }
+
+        if (!_map.TryGetValue(id, out var s))
+        {
+            Debug.LogError($"SoundId not found in library: {id}");
+            return;
+        }
+
+        if (s.clip == null)
+        {
+            Debug.LogError($"No clip assigned for: {id}");
+            return;
+        }
+
+        var src = GetSourceForBus(s.bus);
+        if (src == null)
+        {
+            Debug.LogError($"No AudioSource assigned for bus: {s.bus}");
+            return;
+        }
+
+        Debug.Log($"Playing {id} on bus {s.bus} clip={s.clip.name} vol={s.volume} pitch={s.pitch} loop={s.loop}");
+
+        
+    }
+
+    private void Start()
+    {
+        Play(SoundId.BackgroundMusic);
+    }
+
+    public void StopBus(SoundBus bus)
+    {
+        var src = GetSourceForBus(bus);
+        if (src == null) return;
+
+        src.Stop();
+            src.clip = null;
+    }
+
+
+    public void PlayBackgroundMusic() => Play(SoundId.BackgroundMusic);
+    public void PlayGameOver() => Play(SoundId.GameOver);
+
+    public void PlayAttackRandom()
+    {
+        // Pick one of the attack sounds that exist
+        var choices = new List<SoundId>();
+        if (HasClip(SoundId.Attack1)) choices.Add(SoundId.Attack1);
+        if (HasClip(SoundId.Attack2)) choices.Add(SoundId.Attack2);
+        if (HasClip(SoundId.Attack3)) choices.Add(SoundId.Attack3);
+
+        if (choices.Count == 0) return;
+        Play(choices[UnityEngine.Random.Range(0, choices.Count)]);
+    }
+
+
+
+    public void PlayButton() => Play(SoundId.Buttons);
+
+ 
 
     private const string MASTER = "MasterVol";
     private const string MUSIC = "MusicVol";
     private const string SFX = "SFXVol";
     private const string UI = "UIVol";
 
-    private void Awake()
-    {
-        if (I != null && I != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+    public void SetMasterVolume(float v) => SetMix(MASTER, v);
+    public void SetMusicVolume(float v) => SetMix(MUSIC, v);
+    public void SetSFXVolume(float v) => SetMix(SFX, v);
+    public void SetUIVolume(float v) => SetMix(UI, v);
+  
 
-        I = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    private void Start()
-    {
-
-        ApplySavedVolume(MASTER, 1f);
-        ApplySavedVolume(MUSIC, 1f);
-        ApplySavedVolume(SFX, 1f);
-        ApplySavedVolume(UI, 1f);
-    }
-
-
-    public void PlayMusic(AudioClip clip, bool loop = true)
-    {
-        if (clip == null || musicSource == null) return;
-
-        musicSource.clip = clip;
-        musicSource.loop = loop;
-        musicSource.Play();
-    }
-
-    public void StopMusic()
-    {
-        if (musicSource == null) return;
-        musicSource.Stop();
-        musicSource.clip = null;
-    }
-
-    public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f)
-    {
-        if (clip == null || sfxSource == null) return;
-
-        sfxSource.pitch = pitch;
-        sfxSource.PlayOneShot(clip, Mathf.Clamp01(volume));
-    }
-
-    public void PlayUI(AudioClip clip, float volume = 1f, float pitch = 1f)
-    {
-        if (clip == null) return;
-
-
-        AudioSource src = uiSource != null ? uiSource : sfxSource;
-        if (src == null) return;
-
-        src.pitch = pitch;
-        src.PlayOneShot(clip, Mathf.Clamp01(volume));
-    }
-
-
-    public void SetMasterVolume(float sliderValue) => SetVolume(MASTER, sliderValue);
-    public void SetMusicVolume(float sliderValue) => SetVolume(MUSIC, sliderValue);
-    public void SetSFXVolume(float sliderValue) => SetVolume(SFX, sliderValue);
-    public void SetUIVolume(float sliderValue) => SetVolume(UI, sliderValue);
-
-    public float GetSavedVolume(string exposedParam, float defaultValue = 1f)
-    {
-        return PlayerPrefs.GetFloat(Key(exposedParam), defaultValue);
-    }
-
-    private void ApplySavedVolume(string exposedParam, float defaultValue)
-    {
-        float v = GetSavedVolume(exposedParam, defaultValue);
-        SetVolume(exposedParam, v, save: false);
-    }
-
-    private void SetVolume(string exposedParam, float sliderValue, bool save = true)
+    private void SetMix(string param, float sliderValue)
     {
         if (mixer == null) return;
-
-
         sliderValue = Mathf.Clamp(sliderValue, 0.0001f, 1f);
-
-        float db = Mathf.Log10(sliderValue) * 20f;
-        mixer.SetFloat(exposedParam, db);
-
-        if (save)
-        {
-            PlayerPrefs.SetFloat(Key(exposedParam), sliderValue);
-            PlayerPrefs.Save();
-        }
+        mixer.SetFloat(param, Mathf.Log10(sliderValue) * 20f);
     }
 
-    private static string Key(string exposedParam) => $"vol_{exposedParam}";
+    private AudioSource GetSourceForBus(SoundBus bus)
+    {
+        return bus switch
+        {
+            SoundBus.Music => musicSource,
+            SoundBus.UI => uiSource != null ? uiSource : sfxSource,
+            _ => sfxSource
+        };
+    }
+
+    private float GetPitch(SoundDef s)
+    {
+        if (!s.randomizePitch) return s.pitch;
+        float jitter = UnityEngine.Random.Range(-s.pitchJitter, s.pitchJitter);
+        return Mathf.Clamp(s.pitch + jitter, 0.5f, 2f);
+    }
+
+    private bool HasClip(SoundId id)
+    {
+        return _map.TryGetValue(id, out var s) && s.clip != null;
+    }
 }

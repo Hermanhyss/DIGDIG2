@@ -2082,15 +2082,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3c56708d9bb074e9ea8b7ce412feb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  enemyRb: {fileID: 1560900502}
-  EnemyTransform: {fileID: 1560900507}
-  collisionCollider: {fileID: 1560900503}
-  animator: {fileID: 1560900500}
-  attackCollider: {fileID: 1560900504}
-  health: 10
-  patrolPoints: []
+  areaCenter: {x: 0, y: 0, z: 0}
+  areaSize: {x: 10, y: 0, z: 10}
+  waitTime: 2
+  visionDistance: 15
   viewAngle: 90
-  viewDistance: 10
+  visionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackRange: 2
+  attackCooldown: 1.5
+  alertDuration: 1
+  attackCollider: {fileID: 1560900504}
 --- !u!4 &1560900507
 Transform:
   m_ObjectHideFlags: 0
@@ -2850,18 +2853,6 @@ PrefabInstance:
     - target: {fileID: 3586405234691994134, guid: 9acba3b8a4cf47542b29fcceb5c4cf1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4623902446940626718, guid: 9acba3b8a4cf47542b29fcceb5c4cf1d, type: 3}
-      propertyPath: playerSpeed
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4623902446940626718, guid: 9acba3b8a4cf47542b29fcceb5c4cf1d, type: 3}
-      propertyPath: cooldownTime
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4623902446940626718, guid: 9acba3b8a4cf47542b29fcceb5c4cf1d, type: 3}
-      propertyPath: jumpStrength
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7575661201088614856, guid: 9acba3b8a4cf47542b29fcceb5c4cf1d, type: 3}
       propertyPath: m_Name

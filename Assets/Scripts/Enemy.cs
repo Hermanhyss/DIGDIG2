@@ -22,8 +22,8 @@ namespace Enemies
         #region Attack Settings
         [Header("Attack Settings")]
         public float attackRange = 2f;
-        public float attackCooldown = 1.5f;
         public float alertDuration = 1.0f;
+        public float attackCooldown = 1.5f;
         public Collider attackCollider;
         #endregion
 
@@ -43,6 +43,8 @@ namespace Enemies
         private bool isDead = false;
         #endregion
 
+        private bool isAttackAnimationPlaying = false;
+        private bool isIdleCooldown = false;
         #endregion
 
         #region Audio/Animation Fields
@@ -52,6 +54,12 @@ namespace Enemies
 
         public AudioSource alertAudioSource;
         public AudioClip alertClip;
+
+        public AudioSource attackAudioSource;
+        public AudioClip attackClip;
+
+        public AudioSource deathAudioSource;
+        public AudioClip deathClip;
 
         #endregion
 
@@ -152,25 +160,33 @@ namespace Enemies
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(transform.position, visionDistance);
 
-            // Draw attack range
+            // Draw attack cone at the base of the enemy
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
+            Vector3 origin = transform.position; // Moved down to the base
+            int segments = 20;
+            float halfAngle = viewAngle / 2f;
+            for (int i = 0; i <= segments; i++)
+            {
+                float angle = -halfAngle + (viewAngle * i / segments);
+                Vector3 dir = Quaternion.Euler(0, angle, 0) * transform.forward;
+                Gizmos.DrawLine(origin, origin + dir * attackRange);
+            }
 
             Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
             Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, transform.position + leftBoundary * visionDistance);
-            Gizmos.DrawLine(transform.position, transform.position + rightBoundary * visionDistance);
+            Gizmos.DrawLine(origin, origin + leftBoundary * visionDistance);
+            Gizmos.DrawLine(origin, origin + rightBoundary * visionDistance);
 
             if (player != null)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, player.position);
+                Gizmos.DrawLine(origin, player.position);
 
                 if (Application.isPlaying && CanSeePlayer())
                 {
                     Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(transform.position, player.position);
+                    Gizmos.DrawLine(origin, player.position);
                 }
             }
         }
@@ -268,19 +284,25 @@ namespace Enemies
         /// </summary>
         void HandleChaseOrAttack()
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-            if (distanceToPlayer > attackRange)
+            if (CanAttackPlayer())
             {
-                agent.SetDestination(player.position);
-                animator.SetBool("IsAttacking", false);
-                animator.SetBool("IsMoving", true);
+                // Only trigger attack if animation is not playing and cooldown is finished
+                if (!isAttackAnimationPlaying && !isIdleCooldown)
+                {
+                    agent.ResetPath();
+                    animator.SetBool("IsIdle", false);
+                    animator.SetBool("IsMoving", false);
+                    animator.SetBool("IsAttacking", true);
+                }
             }
             else
             {
-                agent.ResetPath();
-                animator.SetBool("IsMoving", false);
-                animator.SetBool("IsAttacking", true);
+                if (!isAttackAnimationPlaying && !isIdleCooldown)
+                {
+                    agent.SetDestination(player.position);
+                    animator.SetBool("IsAttacking", false);
+                    animator.SetBool("IsMoving", true);
+                }
             }
         }
 
@@ -291,7 +313,7 @@ namespace Enemies
         /// <summary>
         /// Called at the start of the attack animation.
         /// </summary>
-        public void AttackingAnimationStart()
+        public void OpenAttackingColider()
         {
             if (attackCollider != null)
             {
@@ -307,7 +329,7 @@ namespace Enemies
         /// <summary>
         /// Called at the end of the attack animation.
         /// </summary>
-        public void AttackingAnimationEnd()
+        public void CloseAttackingColider()
         {
             if (attackCollider != null)
             {
@@ -350,6 +372,68 @@ namespace Enemies
             }
         }
 
+        /// <summary>
+        /// Called by the AttackSound animation event to play the attack sound.
+        /// </summary>
+        public void AttackSound()
+        {
+            if (attackAudioSource != null && attackClip != null)
+            {
+                attackAudioSource.PlayOneShot(attackClip);
+            }
+            else
+            {
+                Debug.LogWarning("Attack audio source or clip not assigned!");
+            }
+        }
+
+        /// <summary>
+        /// Called by the DeathSound animation event or directly on death to play the death sound.
+        /// </summary>
+        public void DeathSound()
+        {
+            if (deathAudioSource != null && deathClip != null)
+            {
+                deathAudioSource.PlayOneShot(deathClip);
+            }
+            else
+            {
+                Debug.LogWarning("Death audio source or clip not assigned!");
+            }
+        }
+
+        /// <summary>
+        /// Called at the start of the attack animation (not just when the collider is enabled).
+        /// </summary>
+        public void AttackingAnimationStart()
+        {
+            isAttackAnimationPlaying = true;
+        }
+
+        /// <summary>
+        /// Called at the end of the attack animation (not just when the collider is disabled).
+        /// </summary>
+        public void AttackingAnimationEnding()
+        {
+            isAttackAnimationPlaying = false;
+            StartCoroutine(AttackIdleCooldown());
+        }
+
+        private IEnumerator AttackIdleCooldown()
+        {
+            isIdleCooldown = true;
+            agent.isStopped = true;
+            animator.SetBool("IsIdle", true);
+            animator.SetBool("IsMoving", false);
+            animator.SetBool("IsAttacking", false);
+
+            yield return new WaitForSeconds(attackCooldown);
+
+            agent.isStopped = false;
+            animator.SetBool("IsIdle", false);
+            isIdleCooldown = false;
+        }
+
         #endregion
 
         /// <summary>
@@ -378,6 +462,9 @@ namespace Enemies
         {
             isDead = true;
             animator.SetBool("IsDead", true);
+
+            // Play death sound
+            DeathSound();
 
             // Stop movement
             agent.isStopped = true;
@@ -435,6 +522,31 @@ namespace Enemies
                 enemyRenderer.materials[i].color = originalColors[i];
             }
         }
+
+        /// <summary>
+        /// Checks if the player is within attack range and in front of the enemy (attack cone).
+        /// </summary>
+        bool CanAttackPlayer()
+        {
+            if (player == null)
+                return false;
+
+            Vector3 origin = transform.position + Vector3.up * 1.0f;
+            Vector3 directionToPlayer = (player.position - origin).normalized;
+            float distanceToPlayer = Vector3.Distance(origin, player.position);
+
+            if (distanceToPlayer > attackRange)
+                return false;
+
+            float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+            if (angleToPlayer > viewAngle / 2f)
+                return false;
+
+            return true;
+        }
     }
+
+    //TODO: Gör enemy damage mellan 20-35 damage till player 
  }
+
 
