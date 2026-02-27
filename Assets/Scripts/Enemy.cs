@@ -55,6 +55,12 @@ namespace Enemies
         public AudioSource alertAudioSource;
         public AudioClip alertClip;
 
+        public AudioSource attackAudioSource;
+        public AudioClip attackClip;
+
+        public AudioSource deathAudioSource;
+        public AudioClip deathClip;
+
         #endregion
 
         #region Flash On Damage Fields
@@ -367,6 +373,36 @@ namespace Enemies
         }
 
         /// <summary>
+        /// Called by the AttackSound animation event to play the attack sound.
+        /// </summary>
+        public void AttackSound()
+        {
+            if (attackAudioSource != null && attackClip != null)
+            {
+                attackAudioSource.PlayOneShot(attackClip);
+            }
+            else
+            {
+                Debug.LogWarning("Attack audio source or clip not assigned!");
+            }
+        }
+
+        /// <summary>
+        /// Called by the DeathSound animation event or directly on death to play the death sound.
+        /// </summary>
+        public void DeathSound()
+        {
+            if (deathAudioSource != null && deathClip != null)
+            {
+                deathAudioSource.PlayOneShot(deathClip);
+            }
+            else
+            {
+                Debug.LogWarning("Death audio source or clip not assigned!");
+            }
+        }
+
+        /// <summary>
         /// Called at the start of the attack animation (not just when the collider is enabled).
         /// </summary>
         public void AttackingAnimationStart()
@@ -426,6 +462,9 @@ namespace Enemies
         {
             isDead = true;
             animator.SetBool("IsDead", true);
+
+            // Play death sound
+            DeathSound();
 
             // Stop movement
             agent.isStopped = true;
@@ -506,5 +545,8 @@ namespace Enemies
             return true;
         }
     }
+
+    //TODO: Gör enemy damage mellan 20-35 damage till player 
  }
+
 
