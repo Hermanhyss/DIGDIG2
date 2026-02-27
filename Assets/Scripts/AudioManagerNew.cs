@@ -8,8 +8,18 @@ public class AudioManagerNew : MonoBehaviour
    
     public void PlaySound(int clipNumber)
     {
-        audioSources[0].clip = audioClips[clipNumber];
-        audioSources[0].Play();
+
+        foreach (AudioSource source in audioSources)
+        {
+            if (!source.isPlaying)
+            {
+                source.clip = audioClips[clipNumber];
+                source.Play(); 
+                
+                return; // Exit after playing the sound on the first available source
+            }
+        }
+
     }
 
     // Example usage:
