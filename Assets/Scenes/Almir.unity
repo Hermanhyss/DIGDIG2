@@ -2091,9 +2091,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   attackRange: 2
-  attackCooldown: 1.5
   alertDuration: 1
+  attackCooldown: 1.5
   attackCollider: {fileID: 1560900504}
+  maxHealth: 100
+  walkingAudioSource: {fileID: 0}
+  walkingClip: {fileID: 0}
+  alertAudioSource: {fileID: 0}
+  alertClip: {fileID: 0}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
 --- !u!4 &1560900507
 Transform:
   m_ObjectHideFlags: 0
@@ -2760,6 +2767,10 @@ PrefabInstance:
     - target: {fileID: 437688052512880998, guid: cffd22f65e356a749bd6f29437ce0c43, type: 3}
       propertyPath: m_Name
       value: lightbulb
+      objectReference: {fileID: 0}
+    - target: {fileID: 7471782469573714778, guid: cffd22f65e356a749bd6f29437ce0c43, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9102377457112625011, guid: cffd22f65e356a749bd6f29437ce0c43, type: 3}
       propertyPath: m_LocalPosition.x
