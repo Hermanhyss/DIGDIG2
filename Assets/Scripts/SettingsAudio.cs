@@ -10,13 +10,12 @@ public class SettingsAudio : MonoBehaviour
 
     private void Start()
     {
-        // Set slider positions from what AudioManager saves
+        //sparade volymer så de återställs till 1f varje gång
         master.value = AudioManager1.I.GetSavedVolume("MasterVol", 1f);
         music.value = AudioManager1.I.GetSavedVolume("MusicVol", 1f);
         sfx.value = AudioManager1.I.GetSavedVolume("SFXVol", 1f);
         ui.value = AudioManager1.I.GetSavedVolume("UIVol", 1f);
 
-        // Apply them once so mixer matches immediately
         AudioManager1.I.SetMasterVolume(master.value);
         AudioManager1.I.SetMusicVolume(music.value);
         AudioManager1.I.SetSFXVolume(sfx.value);

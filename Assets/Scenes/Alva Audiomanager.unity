@@ -665,7 +665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 47}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &705740037
@@ -917,7 +917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 107}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &954153216
@@ -1414,6 +1414,7 @@ GameObject:
   - component: {fileID: 1368159592}
   - component: {fileID: 1368159594}
   - component: {fileID: 1368159595}
+  - component: {fileID: 1368159596}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -1746,13 +1747,61 @@ MonoBehaviour:
   sounds:
   - id: 0
     bus: 0
-    clip: {fileID: 8300000, guid: 1591606054810d248befe7dac3cb33ad, type: 3}
+    clip: {fileID: 8300000, guid: b81e8af26898343478897b672355a00b, type: 3}
     volume: 0.7
     pitch: 1
     loop: 1
     randomizePitch: 0
     pitchJitter: 0
-  src: {fileID: 0}
+  - id: 2
+    bus: 1
+    clip: {fileID: 8300000, guid: b2cc53ff2f7fc25499494d8523ff4dc4, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 0
+    randomizePitch: 0
+    pitchJitter: 0
+  - id: 3
+    bus: 1
+    clip: {fileID: 8300000, guid: 975563108e3ce774999bbe61d2270a59, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 0
+    randomizePitch: 0
+    pitchJitter: 0
+  - id: 4
+    bus: 1
+    clip: {fileID: 8300000, guid: f5f8c69508907cd4fa9dbf1169579a01, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 0
+    randomizePitch: 0
+    pitchJitter: 0
+  - id: 4
+    bus: 1
+    clip: {fileID: 8300000, guid: f5f8c69508907cd4fa9dbf1169579a01, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 0
+    randomizePitch: 0
+    pitchJitter: 0
+  src: {fileID: 1368159593}
+--- !u!114 &1368159596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368159589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3c016c1f7c39d4d9f2a663af7f9126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsAudio
+  master: {fileID: 1528188241}
+  music: {fileID: 705740037}
+  sfx: {fileID: 2141674914}
+  ui: {fileID: 954153216}
 --- !u!1 &1512373278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1825,7 +1874,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 235}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1528188241
@@ -2449,7 +2498,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 174}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2141674914

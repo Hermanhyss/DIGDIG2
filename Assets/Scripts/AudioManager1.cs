@@ -52,7 +52,7 @@ public class AudioManager1 : MonoBehaviour
 {
     public static AudioManager1 I { get; private set; }
 
-    [Header("Mixer (optional for volume sliders)")]
+    [Header("Mixer")]
     [SerializeField] private AudioMixer mixer;
 
     [Header("Audio Sources")]
@@ -93,7 +93,7 @@ public class AudioManager1 : MonoBehaviour
         Debug.Log($"isPlaying={src.isPlaying}, time={src.time:0.00}, clip={(src.clip ? src.clip.name : "NULL")}");
     }
 
-
+    //detta är för att debugga varför ljudet inte funkar för tillfället
 public void Play(SoundId id)
     {
         if (_map == null)
@@ -146,7 +146,7 @@ public void Play(SoundId id)
 
     public void PlayAttackRandom()
     {
-        // Pick one of the attack sounds that exist
+        
         var choices = new List<SoundId>();
         if (HasClip(SoundId.Attack1)) choices.Add(SoundId.Attack1);
         if (HasClip(SoundId.Attack2)) choices.Add(SoundId.Attack2);
