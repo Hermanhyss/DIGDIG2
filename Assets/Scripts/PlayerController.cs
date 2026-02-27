@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     int numberOfAttack;
     bool ActivateComboTimer;
 
+    int PlayerHP = 100;
 
     bool canAttack;
 
@@ -122,8 +123,6 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
             animator.SetBool("Walking", false);
         }
-
-
         WalkingEffect();
     }
 
