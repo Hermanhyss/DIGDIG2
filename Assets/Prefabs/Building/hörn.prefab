@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 6942053533686842225}
   - component: {fileID: 1253808229995712585}
   - component: {fileID: 544802821705875893}
-  - component: {fileID: 3007894603923354347}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "h\xF6rn"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,15 +112,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5744626472275510883, guid: 461baf2aea0eff646911dfb2fefa4e69, type: 3}
---- !u!114 &3007894603923354347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3806897855593818474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019544d966cf97643aac69a96db55570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FadeObject

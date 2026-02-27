@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3271924389630945806}
   - component: {fileID: 8990583437736672176}
   - component: {fileID: 5577203949323633929}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor side panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

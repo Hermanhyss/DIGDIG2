@@ -547,6 +547,8 @@ namespace Enemies
     }
 
     //TODO: Gör enemy damage mellan 20-35 damage till player 
- }
+    //TODO: Chrmatciskt av spelare till code. Behöver att fixat av en Globaal Volume.
+    //TODO Enemy dödar kanske?
+}
 
 

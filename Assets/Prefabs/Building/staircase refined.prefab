@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1783828948472140700}
   - component: {fileID: 4822625024817789247}
   - component: {fileID: 3605524434912883184}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: staircase refined
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5207765890364131814}
   - component: {fileID: 139794874245744741}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: coll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 192
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
