@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4608667750053790368}
   - component: {fileID: 3389031621006243921}
   - component: {fileID: 4319824047988574345}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Straight Capped pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,6 +109,6 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5436814707256944198, guid: 97cf98da312199b4ab48e44e9cead025, type: 3}

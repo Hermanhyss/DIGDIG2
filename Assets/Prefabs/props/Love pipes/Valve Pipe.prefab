@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5957373621599176741}
   - component: {fileID: 8512397920005904686}
   - component: {fileID: 8366834474947685286}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: valve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 6316426946290691113}
   - component: {fileID: 2542717396008895710}
   - component: {fileID: 7299166144238984587}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: pipevalve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2514530782100272030}
   - component: {fileID: 9110072123676435973}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Valve Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,6 +231,6 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}

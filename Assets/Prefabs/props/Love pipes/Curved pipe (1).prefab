@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2568436097611564045}
   - component: {fileID: 623067136514680906}
   - component: {fileID: 7770216142559180530}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Curved pipe (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,6 +109,6 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2448374742205700962, guid: 1a7f41f7d1c9d414a8656011235088c2, type: 3}
