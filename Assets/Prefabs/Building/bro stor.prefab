@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4756243821454145756}
   - component: {fileID: 4215746463802062412}
   - component: {fileID: 5016936182701164727}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: bro stor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
