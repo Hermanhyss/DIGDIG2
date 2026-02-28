@@ -39,7 +39,7 @@ namespace Enemies
         #region Health Settings
         [Header("Health Settings")]
         public float maxHealth = 100f;
-        private float currentHealth;
+        [SerializeField] private float currentHealth; 
         private bool isDead = false;
         #endregion
 
