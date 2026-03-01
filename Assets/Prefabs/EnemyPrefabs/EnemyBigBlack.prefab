@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9172195754011380647}
   m_Layer: 10
   m_Name: Fot_L
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 654628423096986231}
   m_Layer: 10
   m_Name: "T\xE5r_R"
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,8 +151,8 @@ MonoBehaviour:
   attackRange: 2
   alertDuration: 1.5
   attackCooldown: 1.5
-  enemyattackCollider: {fileID: 0}
-  maxHealth: 10
+  enemyattackCollider: {fileID: 3800248101274856718}
+  maxHealth: 20
   currentHealth: 0
   walkingAudioSource: {fileID: 6666210635835669494}
   walkingClip: {fileID: 8300000, guid: 46cce2440bb38f04bbff8f4c5132ab54, type: 3}
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 4657887693783138697}
   m_Layer: 10
   m_Name: Fot_R
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -688,7 +688,7 @@ GameObject:
   - component: {fileID: 6919866389650418615}
   m_Layer: 10
   m_Name: Arm_R
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -719,7 +719,7 @@ GameObject:
   - component: {fileID: 4316821720428287346}
   m_Layer: 10
   m_Name: "Br\xF6stkorg"
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -754,7 +754,7 @@ GameObject:
   - component: {fileID: 3895594518270443496}
   m_Layer: 10
   m_Name: Ansikte
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -785,7 +785,7 @@ GameObject:
   - component: {fileID: 7700019785330419005}
   m_Layer: 10
   m_Name: "T\xE5r_L"
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -816,7 +816,7 @@ GameObject:
   - component: {fileID: 8874392396711480527}
   m_Layer: 10
   m_Name: Axel_L
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -848,7 +848,7 @@ GameObject:
   - component: {fileID: 1534052150162444272}
   m_Layer: 10
   m_Name: Rygg_Tagg
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -880,7 +880,7 @@ GameObject:
   - component: {fileID: 5966751293146394075}
   m_Layer: 10
   m_Name: Body1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -985,7 +985,7 @@ GameObject:
   - component: {fileID: 5307522845982297081}
   m_Layer: 10
   m_Name: Huvud
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1018,7 +1018,7 @@ GameObject:
   - component: {fileID: 3953042006211017278}
   m_Layer: 10
   m_Name: Belly
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1050,7 +1050,7 @@ GameObject:
   - component: {fileID: 3363716982242504772}
   m_Layer: 10
   m_Name: Huvud_tagg
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1081,7 +1081,7 @@ GameObject:
   - component: {fileID: 9083082904262858146}
   m_Layer: 10
   m_Name: Axel_R
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1113,7 +1113,7 @@ GameObject:
   - component: {fileID: 3769459858425943458}
   m_Layer: 10
   m_Name: Hips
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1147,7 +1147,7 @@ GameObject:
   - component: {fileID: 2057469472374039295}
   m_Layer: 10
   m_Name: Arm_L
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
