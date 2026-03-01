@@ -21,9 +21,11 @@ public class FadeDoor : MonoBehaviour
     private bool _isFading;
 
     private Animator animator;
+    private AudioSource audioSource;
     private void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Awake()
@@ -108,6 +110,7 @@ public class FadeDoor : MonoBehaviour
 
     private System.Collections.IEnumerator FadeIn()
     {
+        PlaySound();
         animator.SetBool("DoorOpen", true);
         float elapsed = 0f;
         Color color = fadeImage.color;
@@ -136,5 +139,13 @@ public class FadeDoor : MonoBehaviour
         }
         color.a = 0f;
         fadeImage.color = color;
+    }
+
+    private void PlaySound()
+    {
+        if (audioSource != null && audioSource.clip != null)
+        {
+            audioSource.Play();
+        }
     }
 }

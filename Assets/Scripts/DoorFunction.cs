@@ -4,10 +4,12 @@ public class DoorFunction : MonoBehaviour
 {
     private Animator animator;
     private bool DoorOpen = false;
+    private AudioSource audioSource;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,11 +36,21 @@ public class DoorFunction : MonoBehaviour
     {
         animator.SetBool("DoorOpen", true);
         DoorOpen = true;
+        PlaySound();
     }
 
     private void CloseDoor()
     {
         animator.SetBool("DoorOpen", false);
         DoorOpen = false;
+        PlaySound();
+    }
+
+    private void PlaySound()
+    {
+        if (audioSource != null && audioSource.clip != null)
+        {
+            audioSource.Play();
+        }
     }
 }
