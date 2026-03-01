@@ -807,17 +807,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 568474949}
   m_CullTransparentMesh: 1
---- !u!114 &599531099 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8884172544940873271, guid: 57abdf65f90e66f48a2edbe7a8f5e5a8, type: 3}
-  m_PrefabInstance: {fileID: 8003842613049380518}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &614389386 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3635103778169103669, guid: 9cb10a25d7d3db0478d6c11b9e22072e, type: 3}
@@ -970,6 +959,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 637454896}
   m_CullTransparentMesh: 1
+--- !u!114 &665915049 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8134818570581864150, guid: 57abdf65f90e66f48a2edbe7a8f5e5a8, type: 3}
+  m_PrefabInstance: {fileID: 8003842613049380518}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &784375357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2689,10 +2689,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OptionsCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 3837700773486478609, guid: f9e533936a170f84cb0e48cbb027968b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6259923007253836525, guid: f9e533936a170f84cb0e48cbb027968b, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2821,7 +2817,7 @@ PrefabInstance:
     - target: {fileID: 2988668806384136422, guid: 9cb10a25d7d3db0478d6c11b9e22072e, type: 3}
       propertyPath: 'buttonsImages.Array.data[4]'
       value: 
-      objectReference: {fileID: 599531099}
+      objectReference: {fileID: 665915049}
     - target: {fileID: 2988668806384136422, guid: 9cb10a25d7d3db0478d6c11b9e22072e, type: 3}
       propertyPath: 'buttonsImages.Array.data[5]'
       value: 
