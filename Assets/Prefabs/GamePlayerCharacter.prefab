@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 5152942321997944380}
   - component: {fileID: 991950081526865927}
   - component: {fileID: 2624424534967571698}
-  - component: {fileID: 7654651997287764730}
+  - component: {fileID: 1716995320767641821}
   m_Layer: 9
   m_Name: maine cara 3
   m_TagString: Untagged
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28ddd1b95356c443bd14669a1f937f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndAttackReciever
---- !u!114 &7654651997287764730
+--- !u!114 &1716995320767641821
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,10 +177,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 941624136843967933}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a17e7dc4d206e1a49a9c791a260806e9, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ef2de907bee3654a8c83e9c9b837aa4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DealDamage
-  damage: 1
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDealDamage
+  damage: 0
+  playerweaponCollider: {fileID: 8315578565871645709}
 --- !u!1 &1192174284547643047
 GameObject:
   m_ObjectHideFlags: 0
@@ -6249,8 +6250,8 @@ GameObject:
   - component: {fileID: 6834703052068116314}
   - component: {fileID: 2057883175535790748}
   - component: {fileID: 4623902446940626718}
-  - component: {fileID: 6623442645245618823}
   - component: {fileID: 3228801244264300203}
+  - component: {fileID: 5617151946193685342}
   m_Layer: 9
   m_Name: GamePlayerCharacter
   m_TagString: Player
@@ -6356,19 +6357,6 @@ MonoBehaviour:
   groundCheck: {fileID: 6257001914371578385}
   groundRadius: 0.2
   comboTimeFrame: 0
---- !u!114 &6623442645245618823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7575661201088614856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a17e7dc4d206e1a49a9c791a260806e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DealDamage
-  damage: 1
 --- !u!81 &3228801244264300203
 AudioListener:
   m_ObjectHideFlags: 0
@@ -6377,6 +6365,20 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7575661201088614856}
   m_Enabled: 1
+--- !u!114 &5617151946193685342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7575661201088614856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef2de907bee3654a8c83e9c9b837aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDealDamage
+  damage: 5
+  playerweaponCollider: {fileID: 8315578565871645709}
 --- !u!1 &7688969959779769952
 GameObject:
   m_ObjectHideFlags: 0

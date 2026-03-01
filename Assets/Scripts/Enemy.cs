@@ -24,7 +24,7 @@ namespace Enemies
         public float attackRange = 2f;
         public float alertDuration = 1.0f;
         public float attackCooldown = 1.5f;
-        public Collider attackCollider;
+        public Collider enemyattackCollider;
         #endregion
 
         #region Private Fields
@@ -196,7 +196,7 @@ namespace Enemies
         /// </summary>
         void OnTriggerEnter(Collider other)
         {
-            if (attackCollider != null && attackCollider.enabled && other.CompareTag("Player"))
+            if (enemyattackCollider != null && enemyattackCollider.enabled && other.CompareTag("Player"))
             {
                 Debug.Log("Enemy deals damage to the player!");
             }
@@ -313,11 +313,11 @@ namespace Enemies
         /// <summary>
         /// Called at the start of the attack animation.
         /// </summary>
-        public void OpenAttackingColider()
+        public void EnemyOpenAttackingColider()
         {
-            if (attackCollider != null)
+            if (enemyattackCollider != null)
             {
-                attackCollider.enabled = true;
+                enemyattackCollider.enabled = true;
                 Debug.Log("Attack collider enabled");
             }
             else
@@ -329,11 +329,11 @@ namespace Enemies
         /// <summary>
         /// Called at the end of the attack animation.
         /// </summary>
-        public void CloseAttackingColider()
+        public void EnemyCloseAttackingColider()
         {
-            if (attackCollider != null)
+            if (enemyattackCollider != null)
             {
-                attackCollider.enabled = false;
+                enemyattackCollider.enabled = false;
                 Debug.Log("Attack collider disabled");
             }
             else
@@ -345,7 +345,7 @@ namespace Enemies
         /// <summary>
         /// Called by the WalkingSound animation event to play the walking sound.
         /// </summary>
-        public void WalkingSound()
+        public void EnemyWalkingSound()
         {
             if (walkingAudioSource != null && walkingClip != null)
             {
@@ -360,7 +360,7 @@ namespace Enemies
         /// <summary>
         /// Called by the SoundAlert animation event to play the alert sound.
         /// </summary>
-        public void SoundAlert()
+        public void EnemySoundAlert()
         {
             if (alertAudioSource != null && alertClip != null)
             {
@@ -375,7 +375,7 @@ namespace Enemies
         /// <summary>
         /// Called by the AttackSound animation event to play the attack sound.
         /// </summary>
-        public void AttackSound()
+        public void EnemyAttackSound()
         {
             if (attackAudioSource != null && attackClip != null)
             {
@@ -390,7 +390,7 @@ namespace Enemies
         /// <summary>
         /// Called by the DeathSound animation event or directly on death to play the death sound.
         /// </summary>
-        public void DeathSound()
+        public void EnemyDeathSound()
         {
             if (deathAudioSource != null && deathClip != null)
             {
@@ -405,7 +405,7 @@ namespace Enemies
         /// <summary>
         /// Called at the start of the attack animation (not just when the collider is enabled).
         /// </summary>
-        public void AttackingAnimationStart()
+        public void EnemyAttackingAnimationStart()
         {
             isAttackAnimationPlaying = true;
         }
@@ -413,7 +413,7 @@ namespace Enemies
         /// <summary>
         /// Called at the end of the attack animation (not just when the collider is disabled).
         /// </summary>
-        public void AttackingAnimationEnding()
+        public void EnemyAttackingAnimationEnding()
         {
             isAttackAnimationPlaying = false;
             StartCoroutine(AttackIdleCooldown());
@@ -439,7 +439,7 @@ namespace Enemies
         /// <summary>
         /// Call this method to deal damage to the enemy.
         /// </summary>
-        public void TakeDamage(float amount)
+        public void EnemyTakeDamage(float amount)
         {
             if (isDead)
                 return;
@@ -463,22 +463,22 @@ namespace Enemies
             isDead = true;
             animator.SetBool("IsDead", true);
 
-            // Play death sound
-            DeathSound();
+           
+            EnemyDeathSound();
 
-            // Stop movement
+            
             agent.isStopped = true;
             agent.enabled = false;
 
-            // Disable attack collider
-            if (attackCollider != null)
-                attackCollider.enabled = false;
+          
+            if (enemyattackCollider != null)
+                enemyattackCollider.enabled = false;
 
-            // Disable all other colliders on this GameObject
+           
             foreach (var col in GetComponents<Collider>())
                 col.enabled = false;
 
-            // Disable this script to stop Update and other logic
+   
             enabled = false;
         }
 
@@ -547,7 +547,6 @@ namespace Enemies
     }
 
     //TODO: Gör enemy damage mellan 20-35 damage till player 
-    //TODO: Chrmatciskt av spelare till code. Behöver att fixat av en Globaal Volume.
     //TODO Enemy dödar kanske?
 }
 
