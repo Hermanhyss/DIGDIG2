@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject optionsMenuCanvas;
     [SerializeField] GameObject quitMenuCanvas;
     [SerializeField] GameObject gameOverCanvas;
-    //[SerializeField] GameObject Blur;
+
     bool paused;
     bool gameOver;
     bool pressedEscape;
@@ -23,7 +23,10 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        gameOverCanvas.SetActive(false);
+        gameOverCanvas.SetActive(false); // Oscar Har varit här
+        optionsMenuCanvas.SetActive(false);// Oscar Har varit här
+        quitMenuCanvas.SetActive(false);// Oscar Har varit här
+        pauseMenu.SetActive(false);// Oscar Har varit här
     }
 
     private void Update()
@@ -52,37 +55,29 @@ public class UIManager : MonoBehaviour
 
         }
 
-        
-
         if (paused)
-        {
-            //Blur.SetActive(true);
+        {           
             Time.timeScale = 0f;
         }
         else
         {
             pauseMenu.SetActive(false);
-            //Blur.SetActive(false);
             Time.timeScale = 1f;
         }
 
         
     }
 
-
-
-    public void EnterNextLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        Debug.Log("Entered Next Level");
-    }
+    //public void EnterNextLevel() // Oscar Har varit här
+    //{
+    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    //    Debug.Log("Entered Next Level");
+    //}
 
     public void EnterContinue()
-    {
-        
+    {  
         paused = false;
         Time.timeScale = 1f;
-
         if(pauseMenu != null)
         {
             pauseMenu.SetActive(false);
@@ -116,11 +111,8 @@ public class UIManager : MonoBehaviour
     {
         optionsMenuCanvas.SetActive(false);
         pauseMenu.SetActive(true);
-
-
-
     }
-    //Quit
+    
     public void EnterQuit()
     {
         quitMenuCanvas.SetActive(true);
@@ -133,7 +125,6 @@ public class UIManager : MonoBehaviour
     {
         quitMenuCanvas.SetActive(false);
         pauseMenu.SetActive(true);
-
 
     }
 
@@ -150,8 +141,7 @@ public class UIManager : MonoBehaviour
     }
 
     public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt
-    {
-        
+    {    
         gameOverCanvas.SetActive(true);
         Time.timeScale = 0f;
     }

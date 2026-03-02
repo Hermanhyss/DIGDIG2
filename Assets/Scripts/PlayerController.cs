@@ -34,16 +34,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float comboTimeFrame;
     int numberOfAttack;
     bool ActivateComboTimer;
-
-    [SerializeField] public float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
+    //int Player Hp 100% // Oscar Har varit här
+    [SerializeField] public float maxHealth = 100f; // Oscar Har varit här
+    [SerializeField] private float currentHealth; // Oscar Har varit här
 
     bool canAttack;
 
-    public float CurrentHealth => currentHealth;
-    public float MaxHealth => maxHealth;
+    public float CurrentHealth => currentHealth; // Oscar Har varit här
+    public float MaxHealth => maxHealth; // Oscar Har varit här
 
-    private UIManager uiManager;
+    private UIManager uiManager; // Oscar Har varit här
 
     private void Start()
     {
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         canAttack = true;
         currentHealth = maxHealth;
-        uiManager = FindObjectOfType<UIManager>();
+        uiManager = FindObjectOfType<UIManager>(); // Oscar Har varit här
     }
 
     private void Update()
@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlayerTakeDamage(int damage)
+    public void PlayerTakeDamage(int damage) // Oscar Har varit här
     {
         currentHealth -= damage;
         if (currentHealth <= 0)
@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour
     }
 
    
-    public void Heal(float amount)
+    public void Heal(float amount) // Oscar Har varit här
     {
         currentHealth += amount;
         if (currentHealth > maxHealth)

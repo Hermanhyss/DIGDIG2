@@ -12744,6 +12744,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7005c46473382ea4e8a38dab309a57d1, type: 3}
+--- !u!1 &821866392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4144538484401942740, guid: 14c3a43a249be884db44e9da3849ca1f, type: 3}
+  m_PrefabInstance: {fileID: 267455033}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &822099375
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19564,6 +19569,7 @@ GameObject:
   - component: {fileID: 1240198828}
   - component: {fileID: 1240198830}
   - component: {fileID: 1240198829}
+  - component: {fileID: 1240198831}
   m_Layer: 0
   m_Name: Gamemanager
   m_TagString: Untagged
@@ -19650,6 +19656,24 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 2780d6634597f694b9fb16f98807a20c, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &1240198831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240198827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6239699bafdc30e479f29705e682b317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  pauseMenu: {fileID: 0}
+  optionsMenuCanvas: {fileID: 0}
+  quitMenuCanvas: {fileID: 0}
+  gameOverCanvas: {fileID: 821866392}
+  buttonsImages: []
+  originalButtonImage: {fileID: 0}
 --- !u!1001 &1241315719
 PrefabInstance:
   m_ObjectHideFlags: 0
