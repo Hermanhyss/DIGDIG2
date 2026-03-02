@@ -35,12 +35,19 @@ public class PlayerController : MonoBehaviour
     int numberOfAttack;
     bool ActivateComboTimer;
 
-    int PlayerHP = 100;
+    [SerializeField] public float maxHealth = 100f;
+    [SerializeField] private float currentHealth;
 
     bool canAttack;
 
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+
+    private UIManager uiManager;
+
     private void Start()
     {
+        
         rb = GetComponent<Rigidbody>();
         chromaticPulse = FindFirstObjectByType<ChromaticPulse>();
         chromaticVignettePulse = FindFirstObjectByType<ChromaticVignettePulse>();
@@ -48,6 +55,8 @@ public class PlayerController : MonoBehaviour
             walkingParticleSystem = walkingEffect.GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
         canAttack = true;
+        currentHealth = maxHealth;
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     private void Update()
@@ -210,4 +219,32 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void PlayerTakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Debug.Log("Player died!");
+            if (uiManager != null)
+            {
+                uiManager.ShowGameOverCanvas();
+            }
+        }
+        else
+        {
+            Debug.Log("Player took damage! HP: " + currentHealth);
+        }
+    }
+
+   
+    public void Heal(float amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+    }
+
+   
 }

@@ -149,16 +149,11 @@ public class UIManager : MonoBehaviour
         Debug.Log("Restarted Scene");
     }
 
-    public void ShowGameOverCanvas()
+    public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt
     {
-        //Time.timeScale = 1f;
-        gameOverCanvas.SetActive(false);
         
-        
-        
-        
- 
-        Debug.Log("Restarted Scene");
+        gameOverCanvas.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void QuitGame()

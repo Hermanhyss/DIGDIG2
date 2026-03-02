@@ -27,6 +27,12 @@ namespace Enemies
         public Collider enemyattackCollider;
         #endregion
 
+        #region Damage Settings
+        [Header("Damage Settings")]
+        public int minDamage = 20;
+        public int maxDamage = 35;
+        #endregion
+
         #region Private Fields
         private NavMeshAgent agent;
         private Animator animator;
@@ -99,6 +105,9 @@ namespace Enemies
                     originalColors[i] = enemyRenderer.materials[i].color;
                 }
             }
+
+            
+    
         }
 
         /// <summary>
@@ -198,7 +207,14 @@ namespace Enemies
         {
             if (enemyattackCollider != null && enemyattackCollider.enabled && other.CompareTag("Player"))
             {
-                Debug.Log("Enemy deals damage to the player!");
+                int damage = Random.Range(minDamage, maxDamage + 1);
+                Debug.Log($"Dealing {damage} damage to the player.");
+
+                PlayerController playerController = other.GetComponent<PlayerController>();
+                if (playerController != null)
+                {
+                    playerController.PlayerTakeDamage(damage);
+                }
             }
         }
 
