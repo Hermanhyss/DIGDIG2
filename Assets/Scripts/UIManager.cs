@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] List<Image> buttonsImages;
     [SerializeField] Sprite originalButtonImage;
 
+
     private void Start()
     {
         gameOverCanvas.SetActive(false); // Oscar Har varit här
