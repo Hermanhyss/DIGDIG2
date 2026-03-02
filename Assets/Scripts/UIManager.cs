@@ -68,11 +68,11 @@ public class UIManager : MonoBehaviour
         
     }
 
-    //public void EnterNextLevel() 
-    //{
-    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    //    Debug.Log("Entered Next Level");
-    //}
+    public void EnterNextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("Entered Next Level");
+    }
 
     public void EnterContinue()
     {  
@@ -151,5 +151,6 @@ public class UIManager : MonoBehaviour
     {
 
         Application.Quit();
+        Debug.Log("Quit Game");
     }
 }
