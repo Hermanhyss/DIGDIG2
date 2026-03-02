@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2250846108227006826}
   - component: {fileID: 682140457992983808}
   - component: {fileID: 2178525417795970143}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: staircase blocky
   m_TagString: Untagged
   m_Icon: {fileID: 0}

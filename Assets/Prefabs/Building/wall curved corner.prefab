@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 1660528938625215061}
   - component: {fileID: 1119480882406268847}
   - component: {fileID: 2630033691272873709}
-  m_Layer: 0
+  - component: {fileID: 2928234836432433239}
+  m_Layer: 7
   m_Name: wall curved corner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,3 +90,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2928234836432433239
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837488858319434587}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -9151110121018396837, guid: 1649fee6cc293de4d9c370597fb34ba5, type: 3}
