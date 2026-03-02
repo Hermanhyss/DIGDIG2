@@ -34141,6 +34141,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1411492577374833026, guid: c9b82f9aa55c28143a6ba80f63f40d01, type: 3}
+      propertyPath: visionMask.m_Bits
+      value: 1664
+      objectReference: {fileID: 0}
     - target: {fileID: 7929546144925720538, guid: c9b82f9aa55c28143a6ba80f63f40d01, type: 3}
       propertyPath: m_Name
       value: EnemySmallGreen
@@ -34482,6 +34486,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyBigBlack
       objectReference: {fileID: 0}
+    - target: {fileID: 2753533229527335573, guid: f3aac54215a666a408560483347cad97, type: 3}
+      propertyPath: visionMask.m_Bits
+      value: 1664
+      objectReference: {fileID: 0}
     - target: {fileID: 2765535888646614069, guid: f3aac54215a666a408560483347cad97, type: 3}
       propertyPath: m_LocalPosition.x
       value: 24.54
@@ -34521,6 +34529,18 @@ PrefabInstance:
     - target: {fileID: 2765535888646614069, guid: f3aac54215a666a408560483347cad97, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4328918600114471224, guid: f3aac54215a666a408560483347cad97, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110001839322678740, guid: f3aac54215a666a408560483347cad97, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8183763653539142445, guid: f3aac54215a666a408560483347cad97, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
