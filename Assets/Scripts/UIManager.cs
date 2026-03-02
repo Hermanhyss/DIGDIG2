@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
         
     }
 
-    //public void EnterNextLevel() // Oscar Har varit här
+    //public void EnterNextLevel() 
     //{
     //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     //    Debug.Log("Entered Next Level");
