@@ -67,6 +67,9 @@ namespace Enemies
         public AudioSource deathAudioSource;
         public AudioClip deathClip;
 
+        public AudioSource damageAudioSource;
+        public AudioClip[] damageClips; // Changed to array
+
         #endregion
 
         #region Unity Events
@@ -397,6 +400,23 @@ namespace Enemies
         }
 
         /// <summary>
+        /// Called by the enemy damage event to play the damage sound.
+        /// </summary>
+        public void EnemyDamageSound()
+        {
+            //Debug.Log("EnemyDamageSound called.");
+            if (damageAudioSource != null && damageClips != null && damageClips.Length > 0)
+            {
+                int index = Random.Range(0, damageClips.Length);
+                damageAudioSource.PlayOneShot(damageClips[index]);
+            }
+            else
+            {
+                Debug.LogWarning("Damage audio source or clips not assigned!");
+            }
+        }
+
+        /// <summary>
         /// Called at the start of the attack animation (not just when the collider is enabled).
         /// </summary>
         public void EnemyAttackingAnimationStart()
@@ -428,6 +448,8 @@ namespace Enemies
             isIdleCooldown = false;
         }
 
+        
+
         #endregion
 
         /// <summary>
@@ -437,6 +459,8 @@ namespace Enemies
         {
             if (isDead)
                 return;
+
+            EnemyDamageSound(); // Play damage sound
 
             currentHealth -= amount;
             if (currentHealth <= 0f)
