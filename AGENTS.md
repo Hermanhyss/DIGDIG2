@@ -2,7 +2,7 @@
 - Project name: 2
 - Unity version: Unity 6000.2.1f1
 - Active game object:
-  - Name: wall light
+  - Name: T pipe
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Ground
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
