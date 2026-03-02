@@ -95,8 +95,9 @@ public class UIManager : MonoBehaviour
         {
             pauseMenu.SetActive(true);
         }
-        //Time.timeScale = 1f;
-        //UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+
         //Debug.Log("Entered Main Menu");
     }
 
