@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2896519930202682910}
   - component: {fileID: 1263673641165678914}
   - component: {fileID: 87514299696471796}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pillar platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,9 +26,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060173983105761946}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 42.52, y: 1.8460755, z: -23.55}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1061, y: 1.1061, z: 1.1061}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
