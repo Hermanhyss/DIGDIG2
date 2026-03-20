@@ -1,16 +1,20 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.EventSystems;
 
-public class TestButtonScript : MonoBehaviour
+public class MyButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public bool buttonPressed;
+
+    public void OnPointerDown(PointerEventData eventData)
     {
-        
+        buttonPressed = true;
+        FindAnyObjectByType<AudioManagerNew>().PlaySound(1);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPointerUp(PointerEventData eventData)
     {
-        
+        buttonPressed = false;
     }
 }

@@ -610,6 +610,7 @@ GameObject:
   - component: {fileID: 1596201322}
   - component: {fileID: 1596201321}
   - component: {fileID: 1596201320}
+  - component: {fileID: 1596201323}
   m_Layer: 5
   m_Name: TestButton
   m_TagString: Untagged
@@ -719,6 +720,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596201318}
   m_CullTransparentMesh: 1
+--- !u!114 &1596201323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596201318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4475e6e65bd9d449b2f7ee74e30759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyButton
+  buttonPressed: 0
 --- !u!1 &1973562851
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,6 +1085,8 @@ MonoBehaviour:
   - {fileID: 2109850458}
   audioClips:
   - {fileID: 8300000, guid: 9c6f76d7c49601f45b3cb18b0350ce5d, type: 3}
+  - {fileID: 8300000, guid: b2cc53ff2f7fc25499494d8523ff4dc4, type: 3}
+  - {fileID: 8300000, guid: f5f8c69508907cd4fa9dbf1169579a01, type: 3}
 --- !u!82 &2109850458
 AudioSource:
   m_ObjectHideFlags: 0
