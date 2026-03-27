@@ -1,8 +1,8 @@
 <!-- UNITY CODE ASSIST INSTRUCTIONS START -->
-- Project name: DIGDIG2
+- Project name: 2
 - Unity version: Unity 6000.2.1f1
 - Active game object:
-  - Name: ArmAttack
+  - Name: ButtonIndicatorQuit
   - Tag: Untagged
-  - Layer: Default
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

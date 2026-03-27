@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,12 +15,26 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject quitMenuCanvas;
     [SerializeField] GameObject gameOverCanvas;
 
+    [SerializeField] GameObject indicators;
+    [SerializeField] GameObject buttonIndicatorPlay;
+    [SerializeField] GameObject buttonIndicatorOptions;
+    [SerializeField] GameObject buttonIndicatorQuit;
+
     bool paused;
     bool gameOver;
     bool pressedEscape;
+    bool menuOpen;
 
     [SerializeField] List<Image> buttonsImages;
     [SerializeField] Sprite originalButtonImage;
+
+    public Animator playAnim;
+    public Animator optionsAnim;
+    public Animator quitAnim;
+
+    public AnimationClip playAnimClip;
+    public AnimationClip optionsAnimClip;
+    public AnimationClip quitAnimClip;
 
 
     private void Start()
@@ -28,6 +43,10 @@ public class UIManager : MonoBehaviour
         optionsMenuCanvas.SetActive(false);// Oscar Har varit här
         quitMenuCanvas.SetActive(false);// Oscar Har varit här
         pauseMenu.SetActive(false);// Oscar Har varit här
+
+        buttonIndicatorPlay.SetActive(false);
+        buttonIndicatorOptions.SetActive(false);
+        buttonIndicatorQuit.SetActive(false);
     }
 
     private void Update()
@@ -66,7 +85,50 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1f;
         }
 
-        
+        //if (menuOpen)
+        //{
+        //    buttonIndicatorOptions.SetActive(false);
+        //    buttonIndicatorQuit.SetActive(false);
+        //}
+        //else if (!menuOpen)
+        //{
+        //    buttonIndicatorOptions.SetActive(true);
+        //    buttonIndicatorQuit.SetActive(true);
+        //}
+    }
+
+    public void PlayHoverEnter()
+    {
+        playAnimClip.frameRate = 60f;
+        buttonIndicatorPlay.SetActive(true);
+
+    }
+
+    public void PlayHoverExit()
+    {
+        buttonIndicatorPlay.SetActive(false);
+    }
+
+    public void OptionsHoverEnter()
+    {
+        optionsAnimClip.frameRate = 60f;
+        buttonIndicatorOptions.SetActive(true);
+    }
+
+    public void OptionsHoverExit()
+    {
+        buttonIndicatorOptions.SetActive(false);
+    }
+
+    public void QuitHoverEnter()
+    {
+        quitAnimClip.frameRate = 60f;
+        buttonIndicatorQuit.SetActive(true);
+    }
+
+    public void QuitHoverExit()
+    {
+        buttonIndicatorQuit.SetActive(false);
     }
 
     public void EnterNextLevel()
@@ -104,19 +166,22 @@ public class UIManager : MonoBehaviour
 
     public void EnterOptions()
     {
-        paused = true;
+        //paused = true;
         optionsMenuCanvas.SetActive(true);
         pauseMenu.SetActive(false);
         Debug.Log("Entered Options");
     }
     public void CloseOptions()
     {
+        menuOpen = false;
         optionsMenuCanvas.SetActive(false);
         pauseMenu.SetActive(true);
+        Debug.Log("Closed Options");
     }
     
     public void EnterQuit()
     {
+        menuOpen = true;
         quitMenuCanvas.SetActive(true);
         pauseMenu.SetActive(false);
         Debug.Log("Entered Quit");
@@ -125,9 +190,9 @@ public class UIManager : MonoBehaviour
 
     public void CloseQuit()
     {
+        menuOpen = false;
         quitMenuCanvas.SetActive(false);
         pauseMenu.SetActive(true);
-
     }
 
     public void TryAgain()
