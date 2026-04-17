@@ -45,12 +45,13 @@ namespace Enemies
         #region Health Settings
         [Header("Health Settings")]
         public float maxHealth = 100f;
-        [SerializeField] private float currentHealth; 
+        [SerializeField] private float currentHealth;
         private bool isDead = false;
         #endregion
 
         private bool isAttackAnimationPlaying = false;
         private bool isIdleCooldown = false;
+        private bool hasDealtDamageThisAttack = false; // Flag to prevent multiple damage applications
         #endregion
 
         #region Audio/Animation Fields
@@ -188,13 +189,17 @@ namespace Enemies
         {
             if (enemyattackCollider != null && enemyattackCollider.enabled && other.CompareTag("Player"))
             {
-                int damage = Random.Range(minDamage, maxDamage + 1);
-                Debug.Log($"Dealing {damage} damage to the player.");
-
-                PlayerController playerController = other.GetComponent<PlayerController>();
-                if (playerController != null)
+                if (!hasDealtDamageThisAttack)
                 {
-                    playerController.PlayerTakeDamage(damage);
+                    int damage = Random.Range(minDamage, maxDamage + 1);
+                    Debug.Log($"Dealing {damage} damage to the player.");
+
+                    PlayerController playerController = other.GetComponent<PlayerController>();
+                    if (playerController != null)
+                    {
+                        playerController.PlayerTakeDamage(damage);
+                    }
+                    hasDealtDamageThisAttack = true;
                 }
             }
         }
@@ -312,6 +317,7 @@ namespace Enemies
         /// </summary>
         public void EnemyOpenAttackingColider()
         {
+            hasDealtDamageThisAttack = false; // Reset at the start of each attack
             if (enemyattackCollider != null)
             {
                 enemyattackCollider.enabled = true;
@@ -448,7 +454,7 @@ namespace Enemies
             isIdleCooldown = false;
         }
 
-        
+
 
         #endregion
 
@@ -513,9 +519,6 @@ namespace Enemies
             return true;
         }
     }
-
-    //TODO: Gör enemy damage mellan 20-35 damage till player 
-    //TODO Enemy dödar kanske?
 }
 
 
