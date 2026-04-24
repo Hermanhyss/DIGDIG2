@@ -38,8 +38,6 @@ public class FadeDoor : MonoBehaviour
     {
         if (_playerInZone && !_isFading && Input.GetKeyDown(interactKey))
         {
-           
-
             if (interactPrompt != null)
                 interactPrompt.SetActive(false);
 

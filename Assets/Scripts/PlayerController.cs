@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     bool ActivateComboTimer;
     //int Player Hp 100% // Oscar Har varit här
     [SerializeField] public float maxHealth = 100f; // Oscar Har varit här
-    [SerializeField] private float currentHealth; // Oscar Har varit här
+    [SerializeField] public float currentHealth; // Oscar Har varit här
 
     bool canAttack;
 
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         canAttack = true;
         currentHealth = maxHealth;
-        uiManager = FindObjectOfType<UIManager>(); // Oscar Har varit här
+        uiManager = FindFirstObjectByType<UIManager>(); // Oscar Har varit här
     }
 
     private void Update()
