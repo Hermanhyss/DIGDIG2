@@ -54,24 +54,24 @@ namespace Enemies
         private bool hasDealtDamageThisAttack = false; // Flag to prevent multiple damage applications
         #endregion
 
-        #region Audio/Animation Fields
+        //#region Audio/Animation Fields
 
-        public AudioSource walkingAudioSource;
-        public AudioClip walkingClip;
+        //public AudioSource walkingAudioSource;
+        //public AudioClip walkingClip;
 
-        public AudioSource alertAudioSource;
-        public AudioClip alertClip;
+        //public AudioSource alertAudioSource;
+        //public AudioClip alertClip;
 
-        public AudioSource attackAudioSource;
-        public AudioClip attackClip;
+        //public AudioSource attackAudioSource;
+        //public AudioClip attackClip;
 
-        public AudioSource deathAudioSource;
-        public AudioClip deathClip;
+        //public AudioSource deathAudioSource;
+        //public AudioClip deathClip;
 
-        public AudioSource damageAudioSource;
-        public AudioClip[] damageClips; // Changed to array
+        //public AudioSource damageAudioSource;
+        //public AudioClip[] damageClips; // Changed to array
 
-        #endregion
+        //#endregion
 
         #region Unity Events
 
@@ -350,14 +350,7 @@ namespace Enemies
         /// </summary>
         public void EnemyWalkingSound()
         {
-            if (walkingAudioSource != null && walkingClip != null)
-            {
-                walkingAudioSource.PlayOneShot(walkingClip);
-            }
-            else
-            {
-                Debug.LogWarning("Walking audio source or clip not assigned!");
-            }
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(5);
         }
 
         /// <summary>
@@ -365,14 +358,7 @@ namespace Enemies
         /// </summary>
         public void EnemySoundAlert()
         {
-            if (alertAudioSource != null && alertClip != null)
-            {
-                alertAudioSource.PlayOneShot(alertClip);
-            }
-            else
-            {
-                Debug.LogWarning("Alert audio source or clip not assigned!");
-            }
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(6);
         }
 
         /// <summary>
@@ -380,14 +366,7 @@ namespace Enemies
         /// </summary>
         public void EnemyAttackSound()
         {
-            if (attackAudioSource != null && attackClip != null)
-            {
-                attackAudioSource.PlayOneShot(attackClip);
-            }
-            else
-            {
-                Debug.LogWarning("Attack audio source or clip not assigned!");
-            }
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(2);
         }
 
         /// <summary>
@@ -395,14 +374,7 @@ namespace Enemies
         /// </summary>
         public void EnemyDeathSound()
         {
-            if (deathAudioSource != null && deathClip != null)
-            {
-                deathAudioSource.PlayOneShot(deathClip);
-            }
-            else
-            {
-                Debug.LogWarning("Death audio source or clip not assigned!");
-            }
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(7);
         }
 
         /// <summary>
@@ -410,16 +382,8 @@ namespace Enemies
         /// </summary>
         public void EnemyDamageSound()
         {
-            //Debug.Log("EnemyDamageSound called.");
-            if (damageAudioSource != null && damageClips != null && damageClips.Length > 0)
-            {
-                int index = Random.Range(0, damageClips.Length);
-                damageAudioSource.PlayOneShot(damageClips[index]);
-            }
-            else
-            {
-                Debug.LogWarning("Damage audio source or clips not assigned!");
-            }
+         
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(8);
         }
 
         /// <summary>
@@ -466,7 +430,7 @@ namespace Enemies
             if (isDead)
                 return;
 
-            EnemyDamageSound(); // Play damage sound
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(8); // Play damage sound
 
             currentHealth -= amount;
             if (currentHealth <= 0f)
@@ -483,7 +447,7 @@ namespace Enemies
             isDead = true;
             animator.SetBool("IsDead", true);
 
-            EnemyDeathSound();
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(7);
 
             agent.isStopped = true;
             agent.enabled = false;
