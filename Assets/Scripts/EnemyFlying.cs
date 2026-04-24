@@ -7,8 +7,6 @@ public class EnemyFlying : MonoBehaviour
     public float heightAdjustSpeed = 2f;
     public LayerMask obstacleMask;
 
-
-
     private void Update()
     {
         if (player == null)
