@@ -6,11 +6,11 @@ public class PlayerDealDamage : MonoBehaviour
     [SerializeField] private int damage;
     [SerializeField] private Collider playerweaponCollider;
 
-    [Header("Audio")]
+/*    [Header("Audio")]
     public AudioSource hitAudioSource;
     public AudioClip hitClip;
     public AudioSource missAudioSource;
-    public AudioClip missClip;
+    public AudioClip missClip; */
 
     private bool hitThisSwing = false;
 
@@ -21,22 +21,24 @@ public class PlayerDealDamage : MonoBehaviour
         else
             Debug.LogWarning("Player weapon collider is not assigned!");
 
-        if (hitAudioSource == null)
-            Debug.LogWarning("Hit AudioSource is not assigned!");
-        if (missAudioSource == null)
+        //if (hitAudioSource == null)
+        //    Debug.LogWarning("Hit AudioSource is not assigned!");
+        //if (missAudioSource == null)
             Debug.LogWarning("Miss AudioSource is not assigned!");
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (playerweaponCollider != null && playerweaponCollider.enabled)
         {
+            FindAnyObjectByType<AudioManagerNew>().PlaySound(4);
             var enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
                 Debug.Log("Enemy take damage");
                 enemy.EnemyTakeDamage(damage);
-                PlayHitSound();
+                FindAnyObjectByType<AudioManagerNew>().PlaySound(3);
                 hitThisSwing = true;
             }
         }
@@ -64,7 +66,7 @@ public class PlayerDealDamage : MonoBehaviour
             if (!hitThisSwing)
             {
                 Debug.Log("Missed attack");
-                PlayMissSound();
+                //PlayMissSound();
             }
             Debug.Log("Weapon collider disabled");
         }
@@ -74,18 +76,18 @@ public class PlayerDealDamage : MonoBehaviour
         }
     }
 
-    public void PlayHitSound()
-    {
-        if (hitAudioSource != null && hitClip != null)
-            hitAudioSource.PlayOneShot(hitClip);
-        else
-            Debug.LogWarning("Hit audio source or clip not assigned!");
-    }
+    //public void PlayHitSound()
+    //{
+    //    if (hitAudioSource != null && hitClip != null)
+    //        hitAudioSource.PlayOneShot(hitClip);
+    //    else
+    //        Debug.LogWarning("Hit audio source or clip not assigned!");
+    //}
 
-    public void PlayMissSound()
-    {
-        if (missAudioSource != null && missClip != null)
-            missAudioSource.PlayOneShot(missClip);
-    }
+    //public void PlayMissSound()
+    //{
+    //    if (missAudioSource != null && missClip != null)
+    //        missAudioSource.PlayOneShot(missClip);
+    //}
 }
 
