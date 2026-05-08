@@ -2,7 +2,7 @@
 - Project name: 2
 - Unity version: Unity 6000.2.1f1
 - Active game object:
-  - Name: MenuHandler
-  - Tag: Untagged
+  - Name: CheckPoint (2)
+  - Tag: Checkpoint
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
