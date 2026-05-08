@@ -226,6 +226,7 @@ public class PlayerController : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
+            animator.Play("Death Animationc");
             Debug.Log("Player died!");
             if (uiManager != null)
             {
