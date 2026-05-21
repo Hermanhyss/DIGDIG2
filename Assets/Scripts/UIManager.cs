@@ -49,6 +49,10 @@ public class UIManager : MonoBehaviour
         {
             //Debug.Log("No checkpoints reached, loading current scene.");
         }
+        if (checkpoints.highestCheckpointReached >= 0 && checkpoints != null)
+        {
+            player.transform.position = checkpoints.checkpoints[checkpointIndex - 1].position;
+        }
     }
 
     private void Start()
@@ -61,13 +65,8 @@ public class UIManager : MonoBehaviour
         buttonIndicatorPlay.SetActive(false);
         buttonIndicatorOptions.SetActive(false);
         buttonIndicatorQuit.SetActive(false);
-
-        checkpointIndex = PlayerPrefs.GetInt("CheckpointIndex", 0);
         
-        if (checkpointIndex > 0 && checkpoints != null)
-        {
-            player.transform.position = checkpoints.checkpoints[checkpointIndex - 1].position;
-        }
+
     }
 
     private void Update()
@@ -216,27 +215,27 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetActive(true);
     }
 
-    public void TryAgain()
-    {
-        PlayerPrefs.SetInt("CheckpointIndex", checkpoints.highestCheckpointReached);
-        PlayerPrefs.Save();
-        StartCoroutine(RestartScene());
-    }
+    //public void TryAgain()
+    //{
+    //    StartCoroutine(RestartScene());
+    //    PlayerPrefs.SetInt("CheckpointIndex", checkpoints.highestCheckpointReached);
+    //    PlayerPrefs.Save();
+    //}
 
-    private IEnumerator RestartScene()
-    {
-        Debug.Log("Restarting Scene...");
-        yield return new WaitForSeconds(0.5f);
-        Debug.Log("Loading Scene...");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        Debug.Log("Restarted Scene");
-    }
+    //private IEnumerator RestartScene()
+    //{
+    //    Debug.Log("Restarting Scene...");
+    //    yield return new WaitForSeconds(0.5f);
+    //    Debug.Log("Loading Scene...");
+    //    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    //    Debug.Log("Restarted Scene");
+    //}
 
-    public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt //Leo gör om den här
-    {    
-        gameOverCanvas.SetActive(true);
-        Time.timeScale = 1f;
-    }
+    //public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt //Leo gör om den här
+    //{    
+    //    gameOverCanvas.SetActive(true);
+    //    Time.timeScale = 1f;
+    //}
 
     public void QuitGame()
     {
