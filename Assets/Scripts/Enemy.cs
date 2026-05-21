@@ -52,6 +52,9 @@ namespace Enemies
         private bool isAttackAnimationPlaying = false;
         private bool isIdleCooldown = false;
         private bool hasDealtDamageThisAttack = false; // Flag to prevent multiple damage applications
+
+        // Cached references
+        private AudioManagerNew audioManager;
         #endregion
 
         //#region Audio/Animation Fields
@@ -90,6 +93,11 @@ namespace Enemies
                 player = playerObj.transform;
 
             currentHealth = maxHealth;
+
+            // Cache AudioManager reference
+            audioManager = FindAnyObjectByType<AudioManagerNew>();
+            if (audioManager == null)
+                Debug.LogWarning("AudioManagerNew not found in scene!");
         }
 
         /// <summary>
@@ -215,21 +223,37 @@ namespace Enemies
         {
             Vector3 origin = transform.position + Vector3.up * 1.0f;
             Vector3 directionToPlayer = (player.position - origin).normalized;
-            float distanceToPlayer = Vector3.Distance(origin, player.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
             if (distanceToPlayer > visionDistance)
                 return false;
 
+            // If player is very close (within attack range), ignore angle restrictions
+            if (distanceToPlayer <= attackRange)
+            {
+                RaycastHit hit;
+                Debug.DrawRay(origin, directionToPlayer * distanceToPlayer, Color.green);
+
+                if (Physics.Raycast(origin, directionToPlayer, out hit, distanceToPlayer, visionMask))
+                {
+                    if (hit.transform.CompareTag("Player"))
+                        return true;
+                }
+                // If no obstacles, player is visible when close
+                return true;
+            }
+
+            // For longer distances, use angle restriction
             float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
             if (angleToPlayer > viewAngle / 2f)
                 return false;
 
-            RaycastHit hit;
+            RaycastHit hit2;
             Debug.DrawRay(origin, directionToPlayer * visionDistance, Color.red);
 
-            if (Physics.Raycast(origin, directionToPlayer, out hit, visionDistance, visionMask))
+            if (Physics.Raycast(origin, directionToPlayer, out hit2, visionDistance, visionMask))
             {
-                if (hit.transform.CompareTag("Player"))
+                if (hit2.transform.CompareTag("Player"))
                     return true;
             }
             return false;
@@ -350,7 +374,8 @@ namespace Enemies
         /// </summary>
         public void EnemyWalkingSound()
         {
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(5);
+            if (audioManager != null)
+                audioManager.PlaySound(5);
         }
 
         /// <summary>
@@ -358,7 +383,8 @@ namespace Enemies
         /// </summary>
         public void EnemySoundAlert()
         {
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(6);
+            if (audioManager != null)
+                audioManager.PlaySound(6);
         }
 
         /// <summary>
@@ -366,7 +392,8 @@ namespace Enemies
         /// </summary>
         public void EnemyAttackSound()
         {
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(2);
+            if (audioManager != null)
+                audioManager.PlaySound(2);
         }
 
         /// <summary>
@@ -374,7 +401,8 @@ namespace Enemies
         /// </summary>
         public void EnemyDeathSound()
         {
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(7);
+            if (audioManager != null)
+                audioManager.PlaySound(7);
         }
 
         /// <summary>
@@ -382,8 +410,8 @@ namespace Enemies
         /// </summary>
         public void EnemyDamageSound()
         {
-         
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(8);
+            if (audioManager != null)
+                audioManager.PlaySound(8);
         }
 
         /// <summary>
@@ -430,9 +458,14 @@ namespace Enemies
             if (isDead)
                 return;
 
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(8); // Play damage sound
-
             currentHealth -= amount;
+
+            // Play damage sound
+            if (audioManager != null)
+                audioManager.PlaySound(8);
+
+          
+
             if (currentHealth <= 0f)
             {
                 Die();
@@ -447,7 +480,8 @@ namespace Enemies
             isDead = true;
             animator.SetBool("IsDead", true);
 
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(7);
+            if (audioManager != null)
+                audioManager.PlaySound(7);
 
             agent.isStopped = true;
             agent.enabled = false;
@@ -469,15 +503,21 @@ namespace Enemies
             if (player == null)
                 return false;
 
-            Vector3 origin = transform.position + Vector3.up * 1.0f;
-            Vector3 directionToPlayer = (player.position - origin).normalized;
+            // Use base position for more reliable close-range detection
+            Vector3 origin = transform.position;
             float distanceToPlayer = Vector3.Distance(origin, player.position);
 
             if (distanceToPlayer > attackRange)
                 return false;
 
+            // Calculate direction from base position
+            Vector3 directionToPlayer = (player.position - origin).normalized;
             float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-            if (angleToPlayer > viewAngle / 2f)
+
+            // More lenient angle check for very close distances
+            float effectiveAngle = distanceToPlayer < attackRange * 0.5f ? viewAngle : viewAngle / 2f;
+
+            if (angleToPlayer > effectiveAngle)
                 return false;
 
             return true;

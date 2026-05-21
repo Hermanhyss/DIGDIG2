@@ -1,4 +1,5 @@
 using Enemies;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDealDamage : MonoBehaviour
@@ -13,6 +14,10 @@ public class PlayerDealDamage : MonoBehaviour
     public AudioClip missClip; */
 
     private bool hitThisSwing = false;
+    private HashSet<Enemy> enemiesHitThisSwing = new HashSet<Enemy>();
+
+    // Cached reference
+    private AudioManagerNew audioManager;
 
     private void Start()
     {
@@ -20,6 +25,11 @@ public class PlayerDealDamage : MonoBehaviour
             playerweaponCollider.enabled = false;
         else
             Debug.LogWarning("Player weapon collider is not assigned!");
+
+        // Cache AudioManager reference
+        audioManager = FindAnyObjectByType<AudioManagerNew>();
+        if (audioManager == null)
+            Debug.LogWarning("AudioManagerNew not found in scene!");
 
         //if (hitAudioSource == null)
         //    Debug.LogWarning("Hit AudioSource is not assigned!");
@@ -29,17 +39,25 @@ public class PlayerDealDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
         if (playerweaponCollider != null && playerweaponCollider.enabled)
         {
-            FindAnyObjectByType<AudioManagerNew>().PlaySound(4);
             var enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
-                Debug.Log("Enemy take damage");
-                enemy.EnemyTakeDamage(damage);
-                FindAnyObjectByType<AudioManagerNew>().PlaySound(3);
-                hitThisSwing = true;
+                // Check if we already hit this enemy during this swing
+                if (!enemiesHitThisSwing.Contains(enemy))
+                {
+                    enemiesHitThisSwing.Add(enemy);
+
+                    Debug.Log("Enemy take damage");
+                    enemy.EnemyTakeDamage(damage);
+
+                    // Play hit sound (only once per enemy per swing)
+                    if (audioManager != null)
+                        audioManager.PlaySound(3);
+
+                    hitThisSwing = true;
+                }
             }
         }
     }
@@ -50,6 +68,12 @@ public class PlayerDealDamage : MonoBehaviour
         {
             playerweaponCollider.enabled = true;
             hitThisSwing = false;
+            enemiesHitThisSwing.Clear(); 
+
+            // Play weapon swing sound once per attack
+            if (audioManager != null)
+                audioManager.PlaySound(4);
+
             Debug.Log("Weapon collider enabled");
         }
         else
