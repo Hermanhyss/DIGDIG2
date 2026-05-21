@@ -10,6 +10,8 @@ public class HealingItem : MonoBehaviour
     BoxCollider boxCollider;
     PlayerController playerController;
 
+    int healNumber = 30;
+
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -23,7 +25,7 @@ public class HealingItem : MonoBehaviour
 
             healingMaterial = renderer.materials[1];
             StartCoroutine(SetBoolForTime(healingMaterial, 1f));
-            playerController.currentHealth += 30;
+            playerController.currentHealth += healNumber;
         }
     }
 
