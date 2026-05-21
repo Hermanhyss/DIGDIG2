@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float peak;
     [SerializeField] float extraGravity;
     bool isRunning;
-    bool isDead;
+    bool isDead = false;
 
     [SerializeField] GameObject walkingEffect;
     ParticleSystem walkingParticleSystem;
@@ -47,8 +48,9 @@ public class PlayerController : MonoBehaviour
     private UIManager uiManager; // Oscar Har varit här
 
     private Checkpoints checkpoints; // Leo Har varit här
-
+    
     private Transform playerTransform; // Leo Har varit här
+    
 
     private void Start()
     {
@@ -63,13 +65,10 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
         uiManager = FindFirstObjectByType<UIManager>(); // Oscar Har varit här
 
-        if (GameManager.Instance.lastCheckpointIndex != -1) // Leo Har varit här
-        {
-            Checkpoints checkpointManager = FindFirstObjectByType<Checkpoints>();
-            Transform spawn = checkpointManager.checkpoints[GameManager.Instance.lastCheckpointIndex];
-            playerTransform.position = spawn.position;
-            playerTransform.rotation = spawn.rotation;
-        }
+        checkpoints = FindFirstObjectByType<Checkpoints>(); //Leo Har varit här
+        Transform spawn = checkpoints.checkpoints[GameManager.Instance.lastCheckpointIndex]; //Leo Har varit här
+        playerTransform.position = spawn.position; //Leo Har varit här
+        playerTransform.rotation = spawn.rotation; //Leo Har varit här
     }
 
     private void Update()
@@ -112,10 +111,11 @@ public class PlayerController : MonoBehaviour
         Running();
         AttackCombo();
 
-        if (isDead)// Leo Har varit här
-        {
-            Respawn();
-        }
+        //if (isDead == true)// Leo Har varit här
+        //{
+        //    Respawn();
+        //    Debug.Log("respawning player...");
+        //}
     }
 
     private void FixedUpdate()
@@ -264,6 +264,14 @@ public class PlayerController : MonoBehaviour
 
     public void Respawn() // Leo Har varit här
     {
+        //if (checkpoints.highestCheckpointReached == 0)
+        //{
+        //    //Debug.Log("No checkpoints reached, loading current scene.");
+        //}
+        //if (checkpoints.highestCheckpointReached >= 0 && checkpoints != null)
+        //{
+        //    transform.position = checkpoints.checkpoints[checkpoints.highestCheckpointReached - 1].position;
+        //}
         Checkpoints checkpointManager = FindFirstObjectByType<Checkpoints>();
         Transform spawn = checkpointManager.checkpoints[GameManager.Instance.lastCheckpointIndex];
         playerTransform.position = spawn.position;

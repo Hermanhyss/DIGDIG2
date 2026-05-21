@@ -45,14 +45,7 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        if(checkpoints.highestCheckpointReached == 0)
-        {
-            //Debug.Log("No checkpoints reached, loading current scene.");
-        }
-        if (checkpoints.highestCheckpointReached >= 0 && checkpoints != null)
-        {
-            player.transform.position = checkpoints.checkpoints[checkpointIndex - 1].position;
-        }
+        
     }
 
     private void Start()
