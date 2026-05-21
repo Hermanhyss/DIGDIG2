@@ -45,6 +45,10 @@ public class PlayerController : MonoBehaviour
 
     private UIManager uiManager; // Oscar Har varit här
 
+    private Checkpoints checkpoints; // Leo Har varit här
+
+    private Transform playerTransform; // Leo Har varit här
+
     private void Start()
     {
         
@@ -57,6 +61,14 @@ public class PlayerController : MonoBehaviour
         canAttack = true;
         currentHealth = maxHealth;
         uiManager = FindFirstObjectByType<UIManager>(); // Oscar Har varit här
+
+        if (GameManager.Instance.lastCheckpointIndex != -1) // Leo Har varit här
+        {
+            Checkpoints checkpointManager = FindFirstObjectByType<Checkpoints>();
+            Transform spawn = checkpointManager.checkpoints[GameManager.Instance.lastCheckpointIndex];
+            playerTransform.position = spawn.position;
+            playerTransform.rotation = spawn.rotation;
+        }
     }
 
     private void Update()

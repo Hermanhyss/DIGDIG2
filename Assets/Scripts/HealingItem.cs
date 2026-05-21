@@ -6,12 +6,14 @@ using static Unity.Burst.Intrinsics.X86.Avx;
 public class HealingItem : MonoBehaviour
 {
     Material healingMaterial;
-    GameObject HealingModel;
+    [SerializeField] GameObject healingVfx;
     BoxCollider boxCollider;
     PlayerController playerController;
+    int healNumber = 30;
 
     private void Start()
     {
+        healingVfx = transform.Find("vfx_Heal_01").gameObject;
         boxCollider = GetComponent<BoxCollider>();
     }
     private void OnTriggerEnter(Collider other)
@@ -23,7 +25,8 @@ public class HealingItem : MonoBehaviour
 
             healingMaterial = renderer.materials[1];
             StartCoroutine(SetBoolForTime(healingMaterial, 1f));
-            playerController.currentHealth += 30;
+            playerController.currentHealth += healNumber;
+            healingVfx.SetActive(true);
         }
     }
 

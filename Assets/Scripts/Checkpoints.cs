@@ -9,7 +9,9 @@ public class Checkpoints : MonoBehaviour
 
     public List<Transform> checkpoints;
 
-    private int highestCheckpointReached = 0;
+    public int highestCheckpointReached = 0;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -45,9 +47,12 @@ public class Checkpoints : MonoBehaviour
         if (checkpoint > highestCheckpointReached)
         {
             highestCheckpointReached = checkpoint;
+            GameManager.Instance.lastCheckpointIndex = checkpoint;
             Debug.Log("Checkpoint " + checkpoint + " reached!");
         }
     }
+
+
 
     
             //playerTransform.position = checkpointTransform.position;
