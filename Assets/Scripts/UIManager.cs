@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     bool gameOver;
     bool pressedEscape;
     bool menuOpen;
+    int checkpointIndex;
 
     [SerializeField] List<Image> buttonsImages;
     [SerializeField] Sprite originalButtonImage;
@@ -38,6 +39,17 @@ public class UIManager : MonoBehaviour
     public AnimationClip optionsAnimClip;
     public AnimationClip quitAnimClip;
 
+    public Checkpoints checkpoints;
+    PlayerController player;
+
+
+    private void Awake()
+    {
+        if(checkpoints.highestCheckpointReached == 0)
+        {
+            //Debug.Log("No checkpoints reached, loading current scene.");
+        }
+    }
 
     private void Start()
     {
@@ -49,6 +61,13 @@ public class UIManager : MonoBehaviour
         buttonIndicatorPlay.SetActive(false);
         buttonIndicatorOptions.SetActive(false);
         buttonIndicatorQuit.SetActive(false);
+
+        checkpointIndex = PlayerPrefs.GetInt("CheckpointIndex", 0);
+        
+        if (checkpointIndex > 0 && checkpoints != null)
+        {
+            player.transform.position = checkpoints.checkpoints[checkpointIndex - 1].position;
+        }
     }
 
     private void Update()
@@ -199,21 +218,24 @@ public class UIManager : MonoBehaviour
 
     public void TryAgain()
     {
-
+        PlayerPrefs.SetInt("CheckpointIndex", checkpoints.highestCheckpointReached);
+        PlayerPrefs.Save();
         StartCoroutine(RestartScene());
     }
 
     private IEnumerator RestartScene()
     {
+        Debug.Log("Restarting Scene...");
         yield return new WaitForSeconds(0.5f);
+        Debug.Log("Loading Scene...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Debug.Log("Restarted Scene");
     }
 
-    public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt
+    public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt //Leo gör om den här
     {    
         gameOverCanvas.SetActive(true);
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
     }
 
     public void QuitGame()
