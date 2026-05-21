@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float peak;
     [SerializeField] float extraGravity;
     bool isRunning;
+    bool isDead;
 
     [SerializeField] GameObject walkingEffect;
     ParticleSystem walkingParticleSystem;
@@ -110,6 +111,11 @@ public class PlayerController : MonoBehaviour
         Jump();
         Running();
         AttackCombo();
+
+        if (isDead)// Leo Har varit här
+        {
+            Respawn();
+        }
     }
 
     private void FixedUpdate()
@@ -232,7 +238,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlayerTakeDamage(int damage) // Oscar Har varit här
+    public void PlayerTakeDamage(int damage) // Oscar Har varit här //Leo har varit här
     {
         currentHealth -= damage;
         if (currentHealth <= 0)
@@ -240,18 +246,15 @@ public class PlayerController : MonoBehaviour
             currentHealth = 0;
             animator.Play("Death Animationc");
             Debug.Log("Player died!");
-            if (uiManager != null)
-            {
-                uiManager.ShowGameOverCanvas();
-            }
+            isDead = true;
         }
         else
         {
             Debug.Log("Player took damage! HP: " + currentHealth);
+            isDead = false;
         }
     }
 
-   
     public void Heal(float amount) // Oscar Har varit här
     {
         currentHealth += amount;
@@ -259,5 +262,39 @@ public class PlayerController : MonoBehaviour
             currentHealth = maxHealth;
     }
 
-   
+    public void Respawn() // Leo Har varit här
+    {
+        Checkpoints checkpointManager = FindFirstObjectByType<Checkpoints>();
+        Transform spawn = checkpointManager.checkpoints[GameManager.Instance.lastCheckpointIndex];
+        playerTransform.position = spawn.position;
+        playerTransform.rotation = spawn.rotation;
+        currentHealth = maxHealth;
+        isDead = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Checkpoint")) // Leo Har varit här
+        {
+            Checkpoints checkpointManager = FindFirstObjectByType<Checkpoints>();
+            for (int i = 0; i < checkpointManager.checkpoints.Count; i++)
+            {
+                if (Vector3.Distance(other.transform.position, checkpointManager.checkpoints[i].position) < 0.5f)
+                {
+                    checkpointManager.GetCheckpointNumber(i + 1);
+                    break;
+                }
+            }
+        }
+
+        
+        if (other.CompareTag("Void")) //Leo Har varit här
+        {
+            Debug.Log("Player fell into the void!");
+            isDead = true;
+        }
+        
+
+
+    }
 }
