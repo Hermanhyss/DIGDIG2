@@ -13,33 +13,58 @@ public class VolumeSettings : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("musicVolume"))
+        if (PlayerPrefs.HasKey("musicVol"))
         {
             LoadVolume();
         }
         else
         {
             SetMusicVolume();
+            SetSFXVolume();
+            SetUIVolume();
+            SetMasterVolume();
         }
+    }
+
+    public void SetMasterVolume()
+    {
+        float volume = masterSlider.value;
+        myMixer.SetFloat("MasterVol", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("masterVol", volume); 
     }
 
     public void SetMusicVolume()
     {
         float volume = musicSlider.value;
-        myMixer.SetFloat("music", Mathf.Log10(volume)*20);
-        PlayerPrefs.SetFloat("musicVolume", volume); //sparar inställningar för musiken
+        myMixer.SetFloat("MusicVol", Mathf.Log10(volume)*20);
+        PlayerPrefs.SetFloat("musicVol", volume); //sparar inställningar för musiken
     }
 
     public void SetSFXVolume()
     {
         float volume = SFXSlider.value;
-        myMixer.SetFloat("SFX", volume);
+        myMixer.SetFloat("SFXVol", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("SFXVol", volume);
+    }
+
+    public void SetUIVolume()
+    {
+        float volume = UISlider.value;
+        myMixer.SetFloat("UIVol", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("UIVol", volume);
     }
 
     private void LoadVolume()
     {
-        musicSlider.value = PlayerPrefs.GetFloat("musicVolume"); //laddar inställningar för musiken
+        musicSlider.value = PlayerPrefs.GetFloat("musicVol"); //laddar inställningar för musiken
+        SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
+        UISlider.value = PlayerPrefs.GetFloat("UIVol");
+        masterSlider.value = PlayerPrefs.GetFloat("masterVol");
 
         SetMusicVolume(); 
+        SetSFXVolume();
+        SetUIVolume();
+        SetMasterVolume();
     }
 }
+
