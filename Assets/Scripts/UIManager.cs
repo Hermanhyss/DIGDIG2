@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject buttonIndicatorOptions;
     [SerializeField] GameObject buttonIndicatorQuit;
 
+
+
     bool paused;
     bool gameOver;
     bool pressedEscape;
@@ -197,6 +199,7 @@ public class UIManager : MonoBehaviour
 
     public void TryAgain()
     {
+
         StartCoroutine(RestartScene());
     }
 
