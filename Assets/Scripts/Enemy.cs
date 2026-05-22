@@ -372,10 +372,10 @@ namespace Enemies
         /// <summary>
         /// Called by the WalkingSound animation event to play the walking sound.
         /// </summary>
-        public void EnemyWalkingSound()
-        {
-            audioManager.PlaySFX(4);
-        }
+        //public void EnemyWalkingSound()
+        //{
+        //    audioManager.PlaySFX(4);
+        //}
 
         /// <summary>
         /// Called by the SoundAlert animation event to play the alert sound.
