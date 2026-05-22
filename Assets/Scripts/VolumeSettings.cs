@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class VolumeSettings : MonoBehaviour
@@ -13,7 +14,7 @@ public class VolumeSettings : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("musicVol"))
+        if (PlayerPrefs.HasKey("MusicVol"))
         {
             LoadVolume();
         }
@@ -26,18 +27,13 @@ public class VolumeSettings : MonoBehaviour
         }
     }
 
-    public void SetMasterVolume()
-    {
-        float volume = Mathf.Clamp(masterSlider.value, 0.0001f, 1f);
-        myMixer.SetFloat("MasterVol", Mathf.Log10(volume) * 20f);
-        PlayerPrefs.SetFloat("MasterVol", masterSlider.value);
-    }
+    
 
-    public void SetMusicVolume()
+    public void SetMusicVolume() //Metod för att ändra musikvolymen
     {
         float volume = musicSlider.value;
         myMixer.SetFloat("MusicVol", Mathf.Log10(volume)*20);
-        PlayerPrefs.SetFloat("musicVol", volume); //sparar inställningar för musiken
+        PlayerPrefs.SetFloat("MusicVol", volume); //sparar inställningar för musiken
     }
 
     public void SetSFXVolume()
@@ -54,9 +50,16 @@ public class VolumeSettings : MonoBehaviour
         PlayerPrefs.SetFloat("UIVol", volume);
     }
 
+    public void SetMasterVolume() 
+    {
+        float volume = Mathf.Clamp(masterSlider.value, 0.0001f, 1f);
+        myMixer.SetFloat("MasterVol", Mathf.Log10(volume) * 20f);
+        PlayerPrefs.SetFloat("MasterVol", masterSlider.value);
+    }
+
     private void LoadVolume()
     {
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVol"); //laddar inställningar för musiken
+        musicSlider.value = PlayerPrefs.GetFloat("musicVol");//laddar inställningar för musiken
         SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
         UISlider.value = PlayerPrefs.GetFloat("UIVol");
         masterSlider.value = PlayerPrefs.GetFloat("MasterVol");
