@@ -6,11 +6,12 @@ public class MyButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
 
     public bool buttonPressed;
+    private AudioManagerNew audioManager;
 
     public void OnPointerDown(PointerEventData eventData)
     {
         buttonPressed = true;
-        FindAnyObjectByType<AudioManagerNew>().PlaySound(1);
+        audioManager.PlaySFX(0);
     }
 
     public void OnPointerUp(PointerEventData eventData)

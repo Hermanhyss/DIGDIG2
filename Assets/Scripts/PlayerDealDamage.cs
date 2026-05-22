@@ -53,8 +53,7 @@ public class PlayerDealDamage : MonoBehaviour
                     enemy.EnemyTakeDamage(damage);
 
                     // Play hit sound (only once per enemy per swing)
-                    if (audioManager != null)
-                        audioManager.PlaySound(3);
+                    audioManager.PlaySFX(1);
 
                     hitThisSwing = true;
                 }
@@ -68,11 +67,10 @@ public class PlayerDealDamage : MonoBehaviour
         {
             playerweaponCollider.enabled = true;
             hitThisSwing = false;
-            enemiesHitThisSwing.Clear(); 
+            enemiesHitThisSwing.Clear();
 
             // Play weapon swing sound once per attack
-            if (audioManager != null)
-                audioManager.PlaySound(4);
+            audioManager.PlaySFX(8);
 
             Debug.Log("Weapon collider enabled");
         }

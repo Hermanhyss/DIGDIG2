@@ -3,23 +3,46 @@ using System.Collections.Generic;
 
 public class AudioManagerNew : MonoBehaviour
 {
-    [SerializeField] List<AudioSource> audioSources;
-    [SerializeField] List<AudioClip> audioClips;
-   
-    public void PlaySound(int clipNumber)
-    {
+    [SerializeField] List<AudioSource> MusicSources;
+    [SerializeField] List<AudioSource> SFXSources;
+    [SerializeField] List<AudioSource> UISources;
+    
+    [SerializeField] List<AudioClip> musicClips;
+    [SerializeField] List<AudioClip> SFXClips;
+    [SerializeField] List<AudioClip> UIClips;
 
+    public void PlayMusic(int clipNumber)
+    {
+        PlaySoundFromPool(MusicSources, musicClips[clipNumber]);
+
+    }
+
+    
+
+    public void PlaySFX(int clipNumber)
+    {
+        PlaySoundFromPool(SFXSources, SFXClips[clipNumber]);
+
+    }
+
+    public void PlayUI(int clipNumber)
+    {
+        PlaySoundFromPool(UISources, UIClips[clipNumber]);
+
+    }
+
+    private void PlaySoundFromPool(List<AudioSource> audioSources, AudioClip clip) // väljer en random AudioSource från listan och spelar det valda klippet, om den inte redan spelar något ljud. Om alla AudioSources i poolen är upptagna, kommer inget ljud att spelas.
+    {
         foreach (AudioSource source in audioSources)
         {
             if (!source.isPlaying)
             {
-                source.clip = audioClips[clipNumber];
-                source.Play(); 
-                
-                return; // Exit after playing the sound on the first available source
+                source.clip = clip;
+                source.Play();
+
+                return; 
             }
         }
-
     }
 
     // Example usage:

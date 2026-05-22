@@ -374,8 +374,7 @@ namespace Enemies
         /// </summary>
         public void EnemyWalkingSound()
         {
-            if (audioManager != null)
-                audioManager.PlaySound(5);
+            audioManager.PlaySFX(4);
         }
 
         /// <summary>
@@ -383,8 +382,7 @@ namespace Enemies
         /// </summary>
         public void EnemySoundAlert()
         {
-            if (audioManager != null)
-                audioManager.PlaySound(6);
+            audioManager.PlaySFX(7);
         }
 
         /// <summary>
@@ -392,8 +390,7 @@ namespace Enemies
         /// </summary>
         public void EnemyAttackSound()
         {
-            if (audioManager != null)
-                audioManager.PlaySound(2);
+            audioManager.PlaySFX(3);
         }
 
         /// <summary>
@@ -401,8 +398,7 @@ namespace Enemies
         /// </summary>
         public void EnemyDeathSound()
         {
-            if (audioManager != null)
-                audioManager.PlaySound(7);
+            audioManager.PlaySFX(6);
         }
 
         /// <summary>
@@ -410,8 +406,7 @@ namespace Enemies
         /// </summary>
         public void EnemyDamageSound()
         {
-            if (audioManager != null)
-                audioManager.PlaySound(8);
+            audioManager.PlaySFX(2);
         }
 
         /// <summary>
@@ -461,10 +456,9 @@ namespace Enemies
             currentHealth -= amount;
 
             // Play damage sound
-            if (audioManager != null)
-                audioManager.PlaySound(8);
+            audioManager.PlaySFX(2);
 
-          
+
 
             if (currentHealth <= 0f)
             {
@@ -480,8 +474,7 @@ namespace Enemies
             isDead = true;
             animator.SetBool("IsDead", true);
 
-            if (audioManager != null)
-                audioManager.PlaySound(7);
+            audioManager.PlaySFX(0);
 
             agent.isStopped = true;
             agent.enabled = false;

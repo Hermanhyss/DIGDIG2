@@ -56,10 +56,10 @@ public class VolumeSettings : MonoBehaviour
 
     private void LoadVolume()
     {
-        musicSlider.value = PlayerPrefs.GetFloat("musicVol"); //laddar inställningar för musiken
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVol"); //laddar inställningar för musiken
         SFXSlider.value = PlayerPrefs.GetFloat("SFXVol");
         UISlider.value = PlayerPrefs.GetFloat("UIVol");
-        masterSlider.value = PlayerPrefs.GetFloat("masterVol");
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVol");
 
         SetMusicVolume(); 
         SetSFXVolume();
