@@ -538,6 +538,37 @@ Transform:
   - {fileID: 8276749434634622461}
   m_Father: {fileID: 5849077553969021361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4460540484721619759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1491824225770831523}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1491824225770831523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4460540484721619759}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.48, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8211965792365558630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4797749697854945557
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +1022,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6788751081117766571}
+  - {fileID: 1491824225770831523}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5761583688765052355
@@ -1005,8 +1037,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1857b6ed01f1bfc4083af9f3dbd232a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyRange
-  enemyFlyingPrefab: {fileID: 0}
-  spawnPoint: {fileID: 0}
+  enemyFlyingPrefab: {fileID: 1698928056665011735, guid: 1445d284f9cbfc046b93b27e5d2c0c54, type: 3}
+  spawnPoint: {fileID: 1491824225770831523}
+  detectionRadius: 17.41
+  maxSpawns: 5
+  animator: {fileID: 5190305026967629925}
 --- !u!1 &7504990793905484832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1436,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6788751081117766571}
   - component: {fileID: 5190305026967629925}
+  - component: {fileID: 7902797341254492677}
   m_Layer: 0
   m_Name: Enemy2
   m_TagString: Untagged
@@ -1447,6 +1483,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7902797341254492677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9163880182391009393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b2dfd980ba4ea94e8fb8122d42caf2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyRangeAnimationReceiver
+  enemyRange: {fileID: 5761583688765052355}
 --- !u!1 &9171166793037873255
 GameObject:
   m_ObjectHideFlags: 0

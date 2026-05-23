@@ -2,26 +2,42 @@ using UnityEngine;
 
 public class EnemyFlying : MonoBehaviour
 {
-    public Transform player; 
-    public float speed = 5f;
-    public float heightAdjustSpeed = 2f;
-    public LayerMask obstacleMask;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float detectionRange = 10f;
+
+    private Transform player;
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+    }
 
     private void Update()
     {
-        if (player == null)
-            return;
+        if (player == null) return;
 
-        Vector3 targetPosition = new Vector3(transform.position.x, player.position.y, transform.position.z);
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, heightAdjustSpeed * Time.deltaTime);
-
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (!Physics.Raycast(transform.position, directionToPlayer, distanceToPlayer, obstacleMask))
+        if (distanceToPlayer <= detectionRange)
         {
-            // No obstacle, move towards player
-            transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+            MoveTowardsPlayer();
         }
+    }
+
+    private void MoveTowardsPlayer()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.position += direction * moveSpeed * Time.deltaTime;
+
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }

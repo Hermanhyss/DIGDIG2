@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8444406519820840515}
+  - component: {fileID: 2974904809625676134}
   - component: {fileID: 6118859476636966371}
   - component: {fileID: 3336243283844194283}
-  - component: {fileID: 2974904809625676134}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -34,6 +34,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2974904809625676134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8947533631225483962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53ed2ebc295ac94cb26487aceec29e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  lastCheckpointIndex: 0
 --- !u!114 &6118859476636966371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,16 +111,3 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: e7768a5bae9210f4e83f2c3c75f95728, type: 2}
   m_BuildHeightMesh: 0
---- !u!114 &2974904809625676134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8947533631225483962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b53ed2ebc295ac94cb26487aceec29e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  lastCheckpointIndex: 0

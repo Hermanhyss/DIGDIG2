@@ -4,25 +4,85 @@ public class EnemyRange : MonoBehaviour
 {
     [SerializeField] private GameObject enemyFlyingPrefab;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private float detectionRadius = 5f;
+    [SerializeField] private int maxSpawns = 5;
+    [SerializeField] private Animator animator;
 
-    private void OnTriggerEnter(Collider other)
+    private Transform player;
+    private int spawnCount = 0;
+    private bool isAttacking = false;
+
+    private readonly string isIdleBool = "IsIdle";
+    private readonly string windUpBool = "IsWindUp";
+    private readonly string attackBool = "IsAttacking";
+
+    private void Start()
     {
-        if (other.CompareTag("Player"))
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (player == null)
         {
-            if (enemyFlyingPrefab != null)
-            {
-                Vector3 spawnPosition = spawnPoint != null ? spawnPoint.position : transform.position;
-                Instantiate(enemyFlyingPrefab, spawnPosition, Quaternion.identity);
-            }
-            else
-            {
-                Debug.LogWarning("FlyingEnemy prefab not assigned in EnemyRange.");
-            }
+            Debug.LogWarning("Player not found in scene!");
+        }
+
+        if (animator == null)
+        {
+            Debug.LogError("Animator is not assigned in EnemyRange!");
+        }
+        else
+        {
+            Debug.Log("EnemyRange initialized successfully with Animator.");
         }
     }
-}
+    private void Update()
+    {
+        if (player == null || spawnCount >= maxSpawns || isAttacking) return;
 
-// Should only spwans enemy when animtion state "projectile go" has fully play or has a animation event calling out 
-// need to fix how many flyingenemy can spwans before the EnemyRange die and gone
-// also need to fix a amonut of range I can control in inspector and make sure the player is in that range before animation can start playing
-// also need to make sure the animation can only play once and not keep playing when the player is in range
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRadius)
+        {
+            StartAttackSequence();
+        }
+    }
+    private void StartAttackSequence()
+    {
+        Debug.Log("StartAttackSequence called - starting WindUp animation");
+        isAttacking = true;
+        animator.SetBool(isIdleBool, false);
+        animator.SetBool(windUpBool, true);
+    }
+
+    public void OnWindUpComplete()
+    {
+        Debug.Log("OnWindUpComplete called!");
+        animator.SetBool(windUpBool, false);
+        animator.SetBool(attackBool, true);
+    }
+    public void SpawnEnemy()
+    {
+        Debug.Log("SpawnEnemy called!");
+        if (enemyFlyingPrefab != null)
+        {
+            Vector3 spawnPosition = spawnPoint != null ? spawnPoint.position : transform.position;
+            Instantiate(enemyFlyingPrefab, spawnPosition, Quaternion.identity);
+            spawnCount++;
+        }
+        else
+        {
+            Debug.LogWarning("FlyingEnemy prefab not assigned in EnemyRange.");
+        }
+    }
+    public void OnAttackComplete()
+    {
+        Debug.Log("OnAttackComplete called!");
+        animator.SetBool(attackBool, false);
+        animator.SetBool(isIdleBool, true);
+        isAttacking = false;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
+}
