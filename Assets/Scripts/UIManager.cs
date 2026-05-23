@@ -64,7 +64,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
+        // Förhindra pause-menyn om Game Over är aktivt
+        if (Input.GetKeyUp(KeyCode.Escape) && !gameOver)
         {
             paused = !paused;
             Debug.Log("Pressed escape");
@@ -92,7 +93,7 @@ public class UIManager : MonoBehaviour
         {           
             Time.timeScale = 0f;
         }
-        else
+        else if (!gameOver) // Återställ bara om det inte är Game Over
         {
             pauseMenu.SetActive(false);
             Time.timeScale = 1f;
@@ -224,11 +225,22 @@ public class UIManager : MonoBehaviour
     //    Debug.Log("Restarted Scene");
     //}
 
-    //public void ShowGameOverCanvas() // Oscar jobbar på denna // Färdigt //Leo gör om den här
-    //{    
-    //    gameOverCanvas.SetActive(true);
-    //    Time.timeScale = 1f;
-    //}
+    public void ShowGameOverCanvas() // Oscar Har varit här
+    {    
+        gameOverCanvas.SetActive(true);
+        Time.timeScale = 0f; // Fryser spelet
+        gameOver = true;
+        Debug.Log("Game Over!");
+    }
+
+    public void RestartFromGameOver()
+    {
+        gameOverCanvas.SetActive(false);
+        Time.timeScale = 1f;
+        gameOver = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Debug.Log("Restarting from Game Over");
+    }
 
     public void QuitGame()
     {

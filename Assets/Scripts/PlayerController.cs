@@ -247,6 +247,12 @@ public class PlayerController : MonoBehaviour
             animator.Play("Death Animationc");
             Debug.Log("Player died!");
             isDead = true;
+
+            // Visa Game Over skärmen och fryser spelet
+            if (uiManager != null)
+            {
+                uiManager.ShowGameOverCanvas();
+            }
         }
         else
         {
@@ -295,13 +301,20 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        
+
         if (other.CompareTag("Void")) //Leo Har varit här
         {
             Debug.Log("Player fell into the void!");
             isDead = true;
+            currentHealth = 0;
+
+            // Visa Game Over skärmen och fryser spelet
+            if (uiManager != null)
+            {
+                uiManager.ShowGameOverCanvas();
+            }
         }
-        
+
 
 
     }
