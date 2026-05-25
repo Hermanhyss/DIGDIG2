@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
     public Button continueButton;
     public Button settingsButton;
     public Button quitButton;
+    public Button backButton;
 
     [Header("Button Sprites")]
     public Sprite continueNormal;
@@ -25,11 +26,15 @@ public class PauseMenu : MonoBehaviour
     public Sprite quitNormal;
     public Sprite quitHover;
     public Sprite quitClicked;
+    public Sprite backNormal;
+    public Sprite backHover;
+    public Sprite backClicked;
 
     [Header("Arrow Indicators")]
     public GameObject continueArrow;
     public GameObject settingsArrow;
     public GameObject quitArrow;
+    public GameObject backArrow;
 
     [Header("Arrow Animation Settings")]
     public float arrowMoveDistance = 10f;
@@ -44,10 +49,12 @@ public class PauseMenu : MonoBehaviour
     private bool animateContinueArrow = false;
     private bool animateSettingsArrow = false;
     private bool animateQuitArrow = false;
+    private bool animateBackArrow = false;
 
     private Vector3 continueArrowStartPos;
     private Vector3 settingsArrowStartPos;
     private Vector3 quitArrowStartPos;
+    private Vector3 backArrowStartPos;
 
     private float arrowAnimTime = 0f;
 
@@ -74,10 +81,16 @@ public class PauseMenu : MonoBehaviour
             quitArrowStartPos = quitArrow.transform.localPosition;
             quitArrow.SetActive(false);
         }
+        if (backArrow != null)
+        {
+            backArrowStartPos = backArrow.transform.localPosition;
+            backArrow.SetActive(false);
+        }
 
         SetupButtonHover(continueButton, continueNormal, continueHover);
         SetupButtonHover(settingsButton, settingsNormal, settingsHover);
         SetupButtonHover(quitButton, quitNormal, quitHover);
+        SetupButtonHover(backButton, backNormal, backHover);
     }
 
     void Update()
@@ -105,6 +118,10 @@ public class PauseMenu : MonoBehaviour
         if (animateQuitArrow && quitArrow != null && quitArrow.activeSelf)
         {
             quitArrow.transform.localPosition = quitArrowStartPos + new Vector3(offset, 0, 0);
+        }
+        if (animateBackArrow && backArrow != null && backArrow.activeSelf)
+        {
+            backArrow.transform.localPosition = backArrowStartPos + new Vector3(offset, 0, 0);
         }
     }
 
@@ -176,6 +193,13 @@ public class PauseMenu : MonoBehaviour
             if (isHovering)
                 quitArrow.transform.localPosition = quitArrowStartPos;
         }
+        else if (button == backButton && backArrow != null)
+        {
+            backArrow.SetActive(isHovering);
+            animateBackArrow = isHovering;
+            if (isHovering)
+                backArrow.transform.localPosition = backArrowStartPos;
+        }
 
         // Reset animation time when starting hover
         if (isHovering)
@@ -194,6 +218,8 @@ public class PauseMenu : MonoBehaviour
                 buttonImage.sprite = settingsClicked;
             else if (button == quitButton && quitClicked != null)
                 buttonImage.sprite = quitClicked;
+            else if (button == backButton && backClicked != null)
+                buttonImage.sprite = backClicked;
         }
 
         // Hide arrow during click
@@ -212,6 +238,11 @@ public class PauseMenu : MonoBehaviour
             quitArrow.SetActive(false);
             animateQuitArrow = false;
         }
+        else if (button == backButton && backArrow != null)
+        {
+            backArrow.SetActive(false);
+            animateBackArrow = false;
+        }
 
         // Disable button to prevent double clicks
         button.interactable = false;
@@ -223,6 +254,8 @@ public class PauseMenu : MonoBehaviour
             StartCoroutine(ExecuteAfterDelay(() => Settings()));
         else if (button == quitButton)
             StartCoroutine(ExecuteAfterDelay(() => Quit()));
+        else if (button == backButton)
+            StartCoroutine(ExecuteAfterDelay(() => GoBackToPauseMenu()));
     }
 
     IEnumerator ExecuteAfterDelay(System.Action action)
@@ -242,6 +275,7 @@ public class PauseMenu : MonoBehaviour
         if (continueButton != null) continueButton.interactable = true;
         if (settingsButton != null) settingsButton.interactable = true;
         if (quitButton != null) quitButton.interactable = true;
+        if (backButton != null) backButton.interactable = true;
 
         // Reset button sprites to normal state
         ResetButtonSprites();
@@ -260,6 +294,7 @@ public class PauseMenu : MonoBehaviour
         if (continueButton != null) continueButton.interactable = true;
         if (settingsButton != null) settingsButton.interactable = true;
         if (quitButton != null) quitButton.interactable = true;
+        if (backButton != null) backButton.interactable = true;
 
         // Reset button sprites to normal state
         ResetButtonSprites();
@@ -276,6 +311,24 @@ public class PauseMenu : MonoBehaviour
         if (continueButton != null) continueButton.interactable = true;
         if (settingsButton != null) settingsButton.interactable = true;
         if (quitButton != null) quitButton.interactable = true;
+        if (backButton != null) backButton.interactable = true;
+    }
+
+    public void GoBackToPauseMenu()
+    {
+        if (settingsMenuUI != null)
+            settingsMenuUI.SetActive(false);
+        if (pauseMenuUI != null)
+            pauseMenuUI.SetActive(true);
+
+        // Re-enable buttons
+        if (continueButton != null) continueButton.interactable = true;
+        if (settingsButton != null) settingsButton.interactable = true;
+        if (quitButton != null) quitButton.interactable = true;
+        if (backButton != null) backButton.interactable = true;
+
+        // Reset button sprites to normal state
+        ResetButtonSprites();
     }
 
     void ResetButtonSprites()
@@ -302,6 +355,14 @@ public class PauseMenu : MonoBehaviour
             Image buttonImage = quitButton.GetComponent<Image>();
             if (buttonImage != null)
                 buttonImage.sprite = quitNormal;
+        }
+
+        // Reset back button
+        if (backButton != null && backNormal != null)
+        {
+            Image buttonImage = backButton.GetComponent<Image>();
+            if (buttonImage != null)
+                buttonImage.sprite = backNormal;
         }
     }
 
