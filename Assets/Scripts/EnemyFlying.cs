@@ -90,7 +90,7 @@ public class EnemyFlying : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         // Explodera när den träffar något
         Destroy(gameObject);
