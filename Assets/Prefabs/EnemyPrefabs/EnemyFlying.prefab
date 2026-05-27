@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1171786879898406943}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1780485760077507609}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -88.86557, z: 0}
 --- !u!1 &1698928056665011735
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,12 +41,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2078445022692650157}
   - component: {fileID: 7340509016072629230}
+  - component: {fileID: 9003832883068312268}
   - component: {fileID: 1331053110556319480}
   - component: {fileID: 7917905763344932241}
-  - component: {fileID: 9003832883068312268}
-  m_Layer: 0
-  m_Name: projectile2
-  m_TagString: Untagged
+  m_Layer: 10
+  m_Name: EnemyFlying
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,22 +80,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1407f9ad5ca1c4f4c88fc8a16a9bb039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyFlying
-  flySpeed: 3
-  chaseSpeed: 6
-  diveSpeed: 10
-  orbitRadius: 3
-  orbitSpeed: 2
-  hoverHeight: 2
-  orbitTime: 3
+  moveSpeed: 3
   detectionRange: 10
-  explosionRange: 2
-  minDamage: 20
-  maxDamage: 40
-  explosionEffect: {fileID: 0}
   animator: {fileID: 9003832883068312268}
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 640
+--- !u!95 &9003832883068312268
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698928056665011735}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 547abb7e4665604428aef2c75cc9d8e4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!136 &1331053110556319480
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -111,7 +120,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -146,28 +155,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!95 &9003832883068312268
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698928056665011735}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2284441187207439134
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1780485760077507609}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +186,7 @@ Transform:
   m_Children:
   - {fileID: 1171786879898406943}
   m_Father: {fileID: 5029583814544218060}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.60835713, y: 5.695693, z: 86.54773}
 --- !u!1 &3469574876127881420
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4227938129062744975}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +218,7 @@ Transform:
   m_Children:
   - {fileID: 5029583814544218060}
   m_Father: {fileID: 2078445022692650157}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -32.635056, y: 96.01288, z: -19.744648}
 --- !u!1 &5046712574819152945
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6518087118296433580}
   - component: {fileID: 4563728368473738002}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pSphere2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,7 +323,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5029583814544218060}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: joint19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -358,4 +345,4 @@ Transform:
   m_Children:
   - {fileID: 1780485760077507609}
   m_Father: {fileID: 4227938129062744975}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.0000000133402125, y: -0.7538483, z: 18.014069}
